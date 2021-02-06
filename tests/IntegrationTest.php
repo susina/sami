@@ -15,7 +15,7 @@ class IntegrationTest extends TestCase
     private $bf;
     private $sami;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $dir = sys_get_temp_dir().'/sami_integ';
         $this->clearCache($dir);
@@ -27,7 +27,7 @@ class IntegrationTest extends TestCase
         ));
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->clearCache(sys_get_temp_dir().'/sami_integ');
     }

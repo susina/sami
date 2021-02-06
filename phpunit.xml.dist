@@ -8,12 +8,11 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="false"
          bootstrap="./vendor/autoload.php"
 >
     <testsuites>
         <testsuite name="Sami Test Suite">
-            <directory>./Sami/Tests</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
