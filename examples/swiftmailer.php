@@ -17,7 +17,7 @@ $versions = GitVersionCollection::create($dir)
     ->add('master', 'master branch')
 ;
 
-return new Sami($iterator, array(
+return new Sami($iterator, [
     'theme'                => 'default',
     'versions'             => $versions,
     'title'                => 'Swiftmailer API',
@@ -25,4 +25,4 @@ return new Sami($iterator, array(
     'cache_dir'            => __DIR__.'/../cache/swiftmailer/%version%',
     'simulate_namespaces'  => true,
     'default_opened_level' => 1,
-));
+]);

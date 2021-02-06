@@ -20,11 +20,11 @@ class IntegrationTest extends TestCase
         $dir = sys_get_temp_dir().'/sami_integ';
         $this->clearCache($dir);
 
-        $this->sami = new Sami(dirname(__DIR__).'/Console', array(
+        $this->sami = new Sami(dirname(__DIR__).'/Console', [
             'build_dir' => $dir.'/build',
             'cache_dir' => $dir.'/cache',
             'insert_todos' => true,
-        ));
+        ]);
     }
 
     protected function tearDown(): void
@@ -48,8 +48,8 @@ class IntegrationTest extends TestCase
 
         $config = new Profile\Configuration();
         $config
-            ->defineMetric(new Profile\Metric('sami.storage.write_calls', array('=Sami\Store\JsonStore::writeClass')))
-            ->defineMetric(new Profile\Metric('sami.storage.read_calls', array('=Sami\Reflection\ClassReflection::fromArray')))
+            ->defineMetric(new Profile\Metric('sami.storage.write_calls', ['=Sami\Store\JsonStore::writeClass']))
+            ->defineMetric(new Profile\Metric('sami.storage.read_calls', ['=Sami\Reflection\ClassReflection::fromArray']))
             ->assert('metrics.sami.storage.write_calls.count == '.$writeCalls, $writeCalls.' write calls')
             // depending on the order in which classes are loaded, we might have an extra call
             ->assert('metrics.sami.storage.read_calls.count <= '.$readCalls, $readCalls.' read calls')
@@ -62,10 +62,10 @@ class IntegrationTest extends TestCase
 
     public function getStorageData()
     {
-        return array(
-            array(true, 0, 6),
-            array(false, 5, 0),
-        );
+        return [
+            [true, 0, 6],
+            [false, 5, 0],
+        ];
     }
 
     private function clearCache()

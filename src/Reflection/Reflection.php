@@ -31,13 +31,13 @@ abstract class Reflection
     protected $hintDesc;
     protected $tags;
     protected $docComment;
-    protected $see = array();
+    protected $see = [];
 
     public function __construct($name, $line)
     {
         $this->name = $name;
         $this->line = $line;
-        $this->tags = array();
+        $this->tags = [];
     }
 
     abstract public function getClass();
@@ -85,10 +85,10 @@ abstract class Reflection
     public function getHint()
     {
         if (!$this->hint) {
-            return array();
+            return [];
         }
 
-        $hints = array();
+        $hints = [];
         $project = $this->getClass()->getProject();
         foreach ($this->hint as $hint) {
             $hints[] = new HintReflection(Project::isPhpTypeHint($hint[0]) ? $hint[0] : $project->getClass($hint[0]), $hint[1]);
@@ -99,7 +99,7 @@ abstract class Reflection
 
     public function getHintAsString()
     {
-        $str = array();
+        $str = [];
         foreach ($this->getHint() as $hint) {
             $str[] = ($hint->isClass() ? $hint->getName()->getShortName() : $hint->getName()).($hint->isArray() ? '[]' : '');
         }
@@ -139,7 +139,7 @@ abstract class Reflection
 
     public function getTags($name)
     {
-        return $this->tags[$name] ?? array();
+        return $this->tags[$name] ?? [];
     }
 
     public function getDeprecated()
@@ -168,7 +168,7 @@ abstract class Reflection
      */
     public function getSee()
     {
-        $see = array();
+        $see = [];
         /* @var $project Project */
         $project = $this->getClass()->getProject();
 

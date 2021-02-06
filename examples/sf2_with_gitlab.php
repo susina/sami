@@ -19,7 +19,7 @@ $versions = GitVersionCollection::create($dir)
     ->add('master', 'master branch')
 ;
 
-return new Sami($iterator, array(
+return new Sami($iterator, [
     'theme' => 'symfony',
     'versions' => $versions,
     'title' => 'Symfony2 API',
@@ -27,4 +27,4 @@ return new Sami($iterator, array(
     'cache_dir' => __DIR__.'/../cache/sf2/%version%',
     'remote_repository' => new GitLabRemoteRepository('symfony/symfony', dirname($dir), 'https://gitlab.company.com/'),
     'default_opened_level' => 2,
-));
+]);

@@ -36,7 +36,7 @@ class Sami extends Container
 {
     const VERSION = '4.0.14-DEV';
 
-    public function __construct($iterator = null, array $config = array())
+    public function __construct($iterator = null, array $config = [])
     {
         parent::__construct();
 
@@ -61,7 +61,7 @@ class Sami extends Container
         };
 
         $this['project'] = function ($sc) {
-            $project = new Project($sc['store'], $sc['_versions'], array(
+            $project = new Project($sc['store'], $sc['_versions'], [
                 'build_dir' => $sc['build_dir'],
                 'cache_dir' => $sc['cache_dir'],
                 'remote_repository' => $sc['remote_repository'],
@@ -78,7 +78,7 @@ class Sami extends Container
                 'sort_class_constants' => $sc['sort_class_constants'],
                 'sort_class_traits' => $sc['sort_class_traits'],
                 'sort_class_interfaces' => $sc['sort_class_interfaces'],
-            ));
+            ]);
             $project->setRenderer($sc['renderer']);
             $project->setParser($sc['parser']);
 
@@ -138,11 +138,11 @@ class Sami extends Container
         };
 
         $this['traverser'] = function ($sc) {
-            $visitors = array(
+            $visitors = [
                 new ClassVisitor\InheritdocClassVisitor(),
                 new ClassVisitor\MethodClassVisitor(),
                 new ClassVisitor\PropertyClassVisitor($sc['parser_context']),
-            );
+            ];
 
             if ($sc['remote_repository'] instanceof AbstractRemoteRepository) {
                 $visitors[] = new ClassVisitor\ViewSourceClassVisitor($sc['remote_repository']);
@@ -159,12 +159,12 @@ class Sami extends Container
         };
 
         $this['twig'] = function () {
-            $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(array('/')), array(
+            $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(['/']), [
                 'strict_variables' => true,
                 'debug' => true,
                 'auto_reload' => true,
                 'cache' => false,
-            ));
+            ]);
             $twig->addExtension(new TwigExtension());
 
             return $twig;
@@ -173,7 +173,7 @@ class Sami extends Container
         $this['theme'] = 'default';
         $this['title'] = 'API';
         $this['version'] = 'master';
-        $this['template_dirs'] = array();
+        $this['template_dirs'] = [];
         $this['build_dir'] = getcwd().'/build';
         $this['cache_dir'] = getcwd().'/cache';
         $this['remote_repository'] = null;

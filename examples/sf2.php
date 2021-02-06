@@ -18,13 +18,13 @@ $versions = GitVersionCollection::create($dir)
     ->add('master', 'master branch')
 ;
 
-return new Sami($iterator, array(
+return new Sami($iterator, [
     'theme'                => 'symfony',
     'versions'             => $versions,
     'title'                => 'Symfony2 API',
     'build_dir'            => __DIR__.'/../build/sf2/%version%',
     'cache_dir'            => __DIR__.'/../cache/sf2/%version%',
     // use a custom theme directory
-    'template_dirs'        => array(__DIR__.'/themes/symfony'),
+    'template_dirs'        => [__DIR__.'/themes/symfony'],
     'default_opened_level' => 2,
-));
+]);

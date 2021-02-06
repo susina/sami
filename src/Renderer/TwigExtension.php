@@ -29,10 +29,10 @@ class TwigExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('desc', array($this, 'parseDesc'), array('needs_context' => true, 'is_safe' => array('html'))),
-            new \Twig_SimpleFilter('snippet', array($this, 'getSnippet')),
-        );
+        return [
+            new \Twig_SimpleFilter('desc', [$this, 'parseDesc'], ['needs_context' => true, 'is_safe' => ['html']]),
+            new \Twig_SimpleFilter('snippet', [$this, 'getSnippet']),
+        ];
     }
 
     /**
@@ -42,14 +42,14 @@ class TwigExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('namespace_path', array($this, 'pathForNamespace'), array('needs_context' => true, 'is_safe' => array('all'))),
-            new \Twig_SimpleFunction('class_path', array($this, 'pathForClass'), array('needs_context' => true, 'is_safe' => array('all'))),
-            new \Twig_SimpleFunction('method_path', array($this, 'pathForMethod'), array('needs_context' => true, 'is_safe' => array('all'))),
-            new \Twig_SimpleFunction('property_path', array($this, 'pathForProperty'), array('needs_context' => true, 'is_safe' => array('all'))),
-            new \Twig_SimpleFunction('path', array($this, 'pathForStaticFile'), array('needs_context' => true)),
-            new \Twig_SimpleFunction('abbr_class', array($this, 'abbrClass'), array('is_safe' => array('all'))),
-        );
+        return [
+            new \Twig_SimpleFunction('namespace_path', [$this, 'pathForNamespace'], ['needs_context' => true, 'is_safe' => ['all']]),
+            new \Twig_SimpleFunction('class_path', [$this, 'pathForClass'], ['needs_context' => true, 'is_safe' => ['all']]),
+            new \Twig_SimpleFunction('method_path', [$this, 'pathForMethod'], ['needs_context' => true, 'is_safe' => ['all']]),
+            new \Twig_SimpleFunction('property_path', [$this, 'pathForProperty'], ['needs_context' => true, 'is_safe' => ['all']]),
+            new \Twig_SimpleFunction('path', [$this, 'pathForStaticFile'], ['needs_context' => true]),
+            new \Twig_SimpleFunction('abbr_class', [$this, 'abbrClass'], ['is_safe' => ['all']]),
+        ];
     }
 
     public function setCurrentDepth($depth)
@@ -120,7 +120,7 @@ class TwigExtension extends \Twig_Extension
             return 'see '.$match[1];
         }, $desc);
 
-        return preg_replace(array('#^<p>\s*#s', '#\s*</p>\s*$#s'), '', $this->markdown->transform($desc));
+        return preg_replace(['#^<p>\s*#s', '#\s*</p>\s*$#s'], '', $this->markdown->transform($desc));
     }
 
     public function getSnippet($string)
@@ -129,7 +129,7 @@ class TwigExtension extends \Twig_Extension
             $string = $matches[1];
         }
 
-        return str_replace(array("\n", "\r"), '', strip_tags($string));
+        return str_replace(["\n", "\r"], '', strip_tags($string));
     }
 
     protected function relativeUri($value)

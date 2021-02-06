@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -14,7 +14,6 @@ namespace Sami\Console;
 use Sami\Console\Command\ParseCommand;
 use Sami\Console\Command\RenderCommand;
 use Sami\Console\Command\UpdateCommand;
-use Sami\ErrorHandler;
 use Sami\Sami;
 use Symfony\Component\Console\Application as BaseApplication;
 
@@ -25,9 +24,6 @@ class Application extends BaseApplication
      */
     public function __construct()
     {
-        error_reporting(-1);
-        ErrorHandler::register();
-
         parent::__construct('Sami', Sami::VERSION);
 
         $this->add(new UpdateCommand());
@@ -35,7 +31,7 @@ class Application extends BaseApplication
         $this->add(new RenderCommand());
     }
 
-    public function getLongVersion()
+    public function getLongVersion(): string
     {
         return parent::getLongVersion().' by <comment>Fabien Potencier</comment>';
     }
