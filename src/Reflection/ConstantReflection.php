@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -12,17 +12,18 @@
 namespace Sami\Reflection;
 
 use Sami\Project;
+use Stringable;
 
-class ConstantReflection extends Reflection
+class ConstantReflection extends Reflection implements Stringable
 {
-    protected $class;
+    protected ClassReflection $class;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->class.'::'.$this->name;
     }
 
-    public function getClass()
+    public function getClass(): ClassReflection
     {
         return $this->class;
     }
@@ -32,7 +33,7 @@ class ConstantReflection extends Reflection
         $this->class = $class;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'name' => $this->name,
@@ -42,7 +43,7 @@ class ConstantReflection extends Reflection
         ];
     }
 
-    public static function fromArray(Project $project, $array)
+    public static function fromArray(Project $project, array $array): ConstantReflection
     {
         $constant = new self($array['name'], $array['line']);
         $constant->shortDesc = $array['short_desc'];

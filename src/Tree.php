@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -13,7 +13,7 @@ namespace Sami;
 
 class Tree
 {
-    public function getTree(Project $project)
+    public function getTree(Project $project): array
     {
         $namespaces = [];
         $ns = $project->getConfig('simulate_namespaces') ? $project->getSimulatedNamespaces() : $project->getNamespaces();
@@ -28,7 +28,7 @@ class Tree
         return $this->generateClassTreeLevel($project, 1, $namespaces, []);
     }
 
-    protected function generateClassTreeLevel(Project $project, $level, array $namespaces, array $classes)
+    protected function generateClassTreeLevel(Project $project, int $level, array $namespaces, array $classes): array
     {
         ++$level;
 

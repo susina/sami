@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -17,15 +17,14 @@ use Sami\RemoteRepository\AbstractRemoteRepository;
 
 class ViewSourceClassVisitor implements ClassVisitorInterface
 {
-    /** @var AbstractRemoteRepository */
-    protected $remoteRepository;
+    protected AbstractRemoteRepository $remoteRepository;
 
     public function __construct(AbstractRemoteRepository $remoteRepository)
     {
         $this->remoteRepository = $remoteRepository;
     }
 
-    public function visit(ClassReflection $class)
+    public function visit(ClassReflection $class): bool
     {
         $filePath = $this->remoteRepository->getRelativePath($class->getFile());
 

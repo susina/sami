@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -29,33 +29,27 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class Project
 {
-    protected $versions;
-    protected $store;
-
-    /** @var Parser */
-    protected $parser;
-
-    /** @var Renderer */
-    protected $renderer;
+    protected VersionCollection $versions;
+    protected StoreInterface $store;
+    protected Parser $parser;
+    protected ?Renderer $renderer = null;
 
     /** @var ClassReflection[] */
-    protected $classes;
+    protected array $classes;
 
-    protected $namespaceClasses;
-    protected $namespaceInterfaces;
-    protected $namespaceExceptions;
-    protected $namespaces;
-    protected $simulatedNamespaces;
-    protected $config;
-    protected $version;
-    protected $filesystem;
+    protected array $namespaceClasses;
+    protected array $namespaceInterfaces;
+    protected array $namespaceExceptions;
+    protected array $namespaces;
+    protected array $simulatedNamespaces;
+    protected array $config;
+    protected ?Version $version = null;
+    protected Filesystem $filesystem;
+    protected array $interfaces;
 
     public function __construct(StoreInterface $store, VersionCollection $versions = null, array $config = [])
     {
-        if (null === $versions) {
-            $versions = new SingleVersionCollection(new Version('master'));
-        }
-        $this->versions = $versions;
+        $this->versions = $versions ?? new SingleVersionCollection(new Version('master'));
         $this->store = $store;
         $this->config = array_merge([
             'build_dir' => sys_get_temp_dir().'sami/build',
@@ -68,7 +62,7 @@ class Project
 
         if (count($this->versions) > 1) {
             foreach (['build_dir', 'cache_dir'] as $dir) {
-                if (false === strpos($this->config[$dir], '%version%')) {
+                if (!str_contains($this->config[$dir], '%version%')) {
                     throw new \LogicException(sprintf('The "%s" setting must have the "%%version%%" placeholder as the project has more than one version.', $dir));
                 }
             }
@@ -77,32 +71,32 @@ class Project
         $this->initialize();
     }
 
-    public function setRenderer(Renderer $renderer)
+    public function setRenderer(Renderer $renderer): void
     {
         $this->renderer = $renderer;
     }
 
-    public function setParser(Parser $parser)
+    public function setParser(Parser $parser): void
     {
         $this->parser = $parser;
     }
 
-    public function getConfig($name, $default = null)
+    public function getConfig(string $name, mixed $default = null): mixed
     {
         return $this->config[$name] ?? $default;
     }
 
-    public function getVersion()
+    public function getVersion(): Version
     {
         return $this->version;
     }
 
-    public function getVersions()
+    public function getVersions(): array
     {
         return $this->versions->getVersions();
     }
 
-    public function update($callback = null, $force = false)
+    public function update(?callable $callback = null, bool $force = false): void
     {
         foreach ($this->versions as $version) {
             $this->switchVersion($version, $callback, $force);
@@ -111,7 +105,7 @@ class Project
         }
     }
 
-    public function parse($callback = null, $force = false)
+    public function parse(callable $callback = null, bool $force = false): void
     {
         $previous = null;
         foreach ($this->versions as $version) {
@@ -123,7 +117,7 @@ class Project
         }
     }
 
-    public function render($callback = null, $force = false)
+    public function render(callable $callback = null, bool $force = false): void
     {
         $previous = null;
         foreach ($this->versions as $version) {
@@ -136,7 +130,7 @@ class Project
         }
     }
 
-    public function switchVersion(Version $version, $callback = null, $force = false)
+    public function switchVersion(Version $version, callable $callback = null, bool $force = false): void
     {
         if (null !== $callback) {
             call_user_func($callback, Message::SWITCH_VERSION, $version);
@@ -151,32 +145,32 @@ class Project
         }
     }
 
-    public function hasNamespaces()
+    public function hasNamespaces(): bool
     {
         // if there is only one namespace and this is the global one, it means that there is no namespace in the project
         return [''] != array_keys($this->namespaces);
     }
 
-    public function hasNamespace($namespace)
+    public function hasNamespace(string $namespace): bool
     {
         return array_key_exists($namespace, $this->namespaces);
     }
 
-    public function getNamespaces()
+    public function getNamespaces(): array
     {
         ksort($this->namespaces);
 
         return array_keys($this->namespaces);
     }
 
-    public function getSimulatedNamespaces()
+    public function getSimulatedNamespaces(): array
     {
         ksort($this->simulatedNamespaces);
 
         return array_keys($this->simulatedNamespaces);
     }
 
-    public function getSimulatedNamespaceAllClasses($namespace)
+    public function getSimulatedNamespaceAllClasses(string $namespace): array
     {
         if (!isset($this->simulatedNamespaces[$namespace])) {
             return [];
@@ -187,7 +181,7 @@ class Project
         return $this->simulatedNamespaces[$namespace];
     }
 
-    public function getNamespaceAllClasses($namespace)
+    public function getNamespaceAllClasses(string $namespace): array
     {
         $classes = array_merge(
             $this->getNamespaceExceptions($namespace),
@@ -200,7 +194,7 @@ class Project
         return $classes;
     }
 
-    public function getNamespaceExceptions($namespace)
+    public function getNamespaceExceptions(string $namespace): array
     {
         if (!isset($this->namespaceExceptions[$namespace])) {
             return [];
@@ -211,7 +205,7 @@ class Project
         return $this->namespaceExceptions[$namespace];
     }
 
-    public function getNamespaceClasses($namespace)
+    public function getNamespaceClasses(string $namespace): array
     {
         if (!isset($this->namespaceClasses[$namespace])) {
             return [];
@@ -222,7 +216,7 @@ class Project
         return $this->namespaceClasses[$namespace];
     }
 
-    public function getNamespaceInterfaces($namespace)
+    public function getNamespaceInterfaces(string $namespace): array
     {
         if (!isset($this->namespaceInterfaces[$namespace])) {
             return [];
@@ -233,7 +227,7 @@ class Project
         return $this->namespaceInterfaces[$namespace];
     }
 
-    public function getNamespaceSubNamespaces($parent)
+    public function getNamespaceSubNamespaces(string $parent): array
     {
         $prefix = strlen($parent) ? ($parent.'\\') : '';
         $len = strlen($prefix);
@@ -241,7 +235,7 @@ class Project
 
         foreach ($this->namespaces as $sub) {
             if (substr($sub, 0, $len) == $prefix
-                && false === strpos(substr($sub, $len), '\\')
+                && !str_contains(substr($sub, $len), '\\')
             ) {
                 $namespaces[] = $sub;
             }
@@ -250,7 +244,7 @@ class Project
         return $namespaces;
     }
 
-    public function addClass(ClassReflection $class)
+    public function addClass(ClassReflection $class): void
     {
         $this->classes[$class->getName()] = $class;
         $class->setProject($this);
@@ -260,7 +254,7 @@ class Project
         }
     }
 
-    public function removeClass(ClassReflection $class)
+    public function removeClass(ClassReflection $class): void
     {
         unset($this->classes[$class->getName()]);
         unset($this->interfaces[$class->getName()]);
@@ -269,7 +263,7 @@ class Project
         unset($this->namespaceExceptions[$class->getNamespace()][$class->getName()]);
     }
 
-    public function getProjectInterfaces()
+    public function getProjectInterfaces(): array
     {
         $interfaces = [];
         foreach ($this->interfaces as $interface) {
@@ -282,7 +276,7 @@ class Project
         return $interfaces;
     }
 
-    public function getProjectClasses()
+    public function getProjectClasses(): array
     {
         $classes = [];
         foreach ($this->classes as $name => $class) {
@@ -295,7 +289,7 @@ class Project
         return $classes;
     }
 
-    public function getClass($name)
+    public function getClass($name): ClassReflection
     {
         $name = ltrim($name, '\\');
 
@@ -309,7 +303,7 @@ class Project
     }
 
     // this must only be used in LazyClassReflection to get the right values
-    public function loadClass($name)
+    public function loadClass(string $name): ?ClassReflection
     {
         $name = ltrim($name, '\\');
 
@@ -318,14 +312,14 @@ class Project
                 $this->addClass($this->store->readClass($this, $name));
             } catch (\InvalidArgumentException $e) {
                 // probably a PHP built-in class
-                return;
+                return null;
             }
         }
 
         return $this->classes[$name];
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         $this->namespaces = [];
         $this->simulatedNamespaces = [];
@@ -336,7 +330,7 @@ class Project
         $this->namespaceExceptions = [];
     }
 
-    public function read()
+    public function read(): void
     {
         $this->initialize();
 
@@ -345,17 +339,17 @@ class Project
         }
     }
 
-    public function getBuildDir()
+    public function getBuildDir(): string
     {
         return $this->prepareDir($this->config['build_dir']);
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->prepareDir($this->config['cache_dir']);
     }
 
-    public function flushDir($dir)
+    public function flushDir(string $dir): string
     {
         $this->filesystem->remove($dir);
         $this->filesystem->mkdir($dir);
@@ -363,26 +357,26 @@ class Project
         file_put_contents($dir.'/PROJECT_VERSION', $this->version);
     }
 
-    public function seedCache($previous, $current)
+    public function seedCache(string $previous, string $current): void
     {
         $this->filesystem->remove($current);
         $this->filesystem->mirror($previous, $current);
         $this->read();
     }
 
-    public static function isPhpTypeHint($hint)
+    public static function isPhpTypeHint(string $hint): bool
     {
         return in_array(strtolower($hint), ['', 'scalar', 'object', 'boolean', 'bool', 'true', 'false', 'int', 'integer', 'array', 'string', 'mixed', 'void', 'null', 'resource', 'double', 'float', 'callable', '$this']);
     }
 
-    protected function updateCache(ClassReflection $class)
+    protected function updateCache(ClassReflection $class): void
     {
         $name = $class->getName();
 
         $this->namespaces[$class->getNamespace()] = $class->getNamespace();
         // add sub-namespaces
         $namespace = $class->getNamespace();
-        while ($namespace = substr($namespace, 0, strrpos($namespace, '\\'))) {
+        while ($namespace = substr($namespace, 0, (int) strrpos($namespace, '\\'))) {
             $this->namespaces[$namespace] = $namespace;
         }
 
@@ -410,7 +404,7 @@ class Project
         }
     }
 
-    protected function prepareDir($dir)
+    protected function prepareDir(string $dir): string
     {
         static $prepared = [];
 
@@ -440,12 +434,12 @@ class Project
         return $dir;
     }
 
-    protected function replaceVars($pattern)
+    protected function replaceVars(string $pattern): string
     {
         return str_replace('%version%', $this->version, $pattern);
     }
 
-    protected function parseVersion(Version $version, $previous, $callback = null, $force = false)
+    protected function parseVersion(Version $version, string $previous, ?callable $callback = null, bool $force = false): void
     {
         if (null === $this->parser) {
             throw new \LogicException('You must set a parser.');
@@ -470,7 +464,7 @@ class Project
         }
     }
 
-    protected function renderVersion(Version $version, $previous, $callback = null, $force = false)
+    protected function renderVersion(Version $version, string $previous, ?callable $callback = null, bool $force = false): void
     {
         if (null === $this->renderer) {
             throw new \LogicException('You must set a renderer.');
@@ -493,18 +487,19 @@ class Project
         }
     }
 
-    public function getSourceRoot()
+    //@todo never used: remove?
+    public function getSourceRoot(): string
     {
         if (!$root = $this->getConfig('source_url')) {
-            return;
+            return '';
         }
 
-        if (false !== strpos($root, 'github')) {
+        if (str_contains($root, 'github')) {
             return $root.'/tree/'.$this->version;
         }
     }
 
-    public function getViewSourceUrl($relativePath, $line)
+    public function getViewSourceUrl(string $relativePath, int $line): string
     {
         $remoteRepository = $this->getConfig('remote_repository');
 

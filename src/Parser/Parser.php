@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -13,18 +13,19 @@ namespace Sami\Parser;
 
 use Sami\Message;
 use Sami\Project;
+use Sami\Reflection\ClassReflection;
 use Sami\Reflection\LazyClassReflection;
 use Sami\Store\StoreInterface;
 use Symfony\Component\Finder\Finder;
 
 class Parser
 {
-    protected $store;
-    protected $iterator;
-    protected $parser;
-    protected $traverser;
+    protected StoreInterface $store;
+    protected Finder $iterator;
+    protected CodeParser $parser;
+    protected ClassTraverser $traverser;
 
-    public function __construct($iterator, StoreInterface $store, CodeParser $parser, ClassTraverser $traverser)
+    public function __construct(string|Finder $iterator, StoreInterface $store, CodeParser $parser, ClassTraverser $traverser)
     {
         $this->iterator = $this->createIterator($iterator);
         $this->store = $store;
@@ -32,7 +33,7 @@ class Parser
         $this->traverser = $traverser;
     }
 
-    public function parse(Project $project, $callback = null)
+    public function parse(Project $project, ?callable $callback = null): Transaction
     {
         $step = 0;
         $steps = iterator_count($this->iterator);
@@ -77,6 +78,7 @@ class Parser
         // visit each class for stuff that can only be done when all classes are parsed
         $toStore->addAll($this->traverser->traverse($project));
 
+        /** @var ClassReflection $class */
         foreach ($toStore as $class) {
             $this->store->writeClass($project, $class);
         }
@@ -84,15 +86,13 @@ class Parser
         return $transaction;
     }
 
-    private function createIterator($iterator)
+    private function createIterator(string|Finder $iterator): Finder
     {
         if (is_string($iterator)) {
             $it = new Finder();
             $it->files()->name('*.php')->in($iterator);
 
             return $it;
-        } elseif (!$iterator instanceof \Traversable) {
-            throw new \InvalidArgumentException('The iterator must be a directory name or a Finder instance.');
         }
 
         return $iterator;

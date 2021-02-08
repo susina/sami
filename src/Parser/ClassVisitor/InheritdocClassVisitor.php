@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -16,7 +16,7 @@ use Sami\Reflection\ClassReflection;
 
 class InheritdocClassVisitor implements ClassVisitorInterface
 {
-    public function visit(ClassReflection $class)
+    public function visit(ClassReflection $class): bool
     {
         $modified = false;
         foreach ($class->getMethods() as $name => $method) {
@@ -24,8 +24,8 @@ class InheritdocClassVisitor implements ClassVisitorInterface
                 continue;
             }
 
-            foreach ($method->getParameters() as $name => $parameter) {
-                if (!$parentParameter = $parentMethod->getParameter($name)) {
+            foreach ($method->getParameters() as $paramName => $parameter) {
+                if (!$parentParameter = $parentMethod->getParameter($paramName)) {
                     continue;
                 }
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -23,7 +23,7 @@ class DocBlockParser
      *
      * @return DocBlockNode
      */
-    public function parse($comment, ParserContext $context)
+    public function parse(mixed $comment, ParserContext $context): DocBlockNode
     {
         $docBlock = null;
         $errorMessage = '';
@@ -53,49 +53,37 @@ class DocBlockParser
         return $result;
     }
 
-    public function getTag($string)
+    public function getTag(string $string): Tag
     {
         return Tag::createInstance($string);
     }
 
-    protected function parseTag(DocBlock\Tag $tag)
+    protected function parseTag(DocBlock\Tag $tag): array|string
     {
-        switch (substr(get_class($tag), 38)) {
-            case 'VarTag':
-            case 'ReturnTag':
-                return [
-                    $this->parseHint($tag->getTypes()),
-                    $tag->getDescription(),
-                ];
-            case 'PropertyTag':
-            case 'PropertyReadTag':
-            case 'PropertyWriteTag':
-            case 'ParamTag':
-                return [
-                    $this->parseHint($tag->getTypes()),
-                    ltrim($tag->getVariableName(), '$'),
-                    $tag->getDescription(),
-                ];
-            case 'ThrowsTag':
-                return [
-                    $tag->getType(),
-                    $tag->getDescription(),
-                ];
-            case 'SeeTag':
-                // For backwards compatibility, in first cell we store content.
-                // In second - only a referer for further parsing.
-                // In docblock node we handle this in getOtherTags() method.
-                return [
-                    $tag->getContent(),
-                    $tag->getReference(),
-                    $tag->getDescription(),
-                ];
-            default:
-                return $tag->getContent();
-        }
+        return match (substr(get_class($tag), 38)) {
+            'VarTag', 'ReturnTag' => [
+                $this->parseHint($tag->getTypes()),
+                $tag->getDescription(),
+            ],
+            'PropertyTag', 'PropertyReadTag', 'PropertyWriteTag', 'ParamTag' => [
+                $this->parseHint($tag->getTypes()),
+                ltrim($tag->getVariableName(), '$'),
+                $tag->getDescription(),
+            ],
+            'ThrowsTag' => [
+                $tag->getType(),
+                $tag->getDescription(),
+            ],
+            'SeeTag' => [
+                $tag->getContent(),
+                $tag->getReference(),
+                $tag->getDescription(),
+            ],
+            default => $tag->getContent(),
+        };
     }
 
-    protected function parseHint($rawHints)
+    protected function parseHint(array $rawHints): array
     {
         $hints = [];
         foreach ($rawHints as $hint) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -11,45 +11,45 @@
 
 namespace Sami\Reflection;
 
-class HintReflection
+//@todo refactor to accept only one type of name
+class HintReflection implements \Stringable
 {
-    protected $name;
-    protected $array;
+    protected string|ClassReflection $name;
+    protected bool $array;
 
-    public function __construct($name, $array)
+    public function __construct(string|ClassReflection $name, bool $array)
     {
         $this->name = $name;
         $this->array = $array;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        // We're casting name to string, as it can be eg. `ClassReflection` object.
         return (string) $this->name;
     }
 
-    public function getName()
+    public function getName(): string|ClassReflection
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string|ClassReflection $name): void
     {
         $this->name = $name;
     }
 
-    public function isClass()
+    public function isClass(): bool
     {
         return $this->name instanceof ClassReflection;
     }
 
-    public function isArray()
+    public function isArray(): bool
     {
         return $this->array;
     }
 
-    public function setArray($boolean)
+    public function setArray(bool $boolean): void
     {
-        $this->array = (bool) $boolean;
+        $this->array = $boolean;
     }
 }

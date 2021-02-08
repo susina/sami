@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -14,18 +14,23 @@ namespace Sami\Parser;
 use Sami\Parser\Filter\FilterInterface;
 use Sami\Reflection\ClassReflection;
 
+// @todo add types where there aren't
 class ParserContext
 {
-    protected $filter;
-    protected $docBlockParser;
+    protected FilterInterface $filter;
+    protected DocBlockParser $docBlockParser;
     protected $prettyPrinter;
-    protected $errors;
+    protected array $errors = [];
     protected $namespace;
-    protected $aliases;
-    protected $class;
+
+    /** @var string[] */
+    protected array $aliases = [];
+    protected ?ClassReflection $class = null;
     protected $file;
-    protected $hash;
-    protected $classes;
+    protected ?string $hash = null;
+
+    /** @var ClassReflection[] */
+    protected array $classes;
 
     public function __construct(FilterInterface $filter, DocBlockParser $docBlockParser, $prettyPrinter)
     {
@@ -34,7 +39,7 @@ class ParserContext
         $this->prettyPrinter = $prettyPrinter;
     }
 
-    public function getFilter()
+    public function getFilter(): FilterInterface
     {
         return $this->filter;
     }
@@ -42,7 +47,7 @@ class ParserContext
     /**
      * @return DocBlockParser
      */
-    public function getDocBlockParser()
+    public function getDocBlockParser(): DocBlockParser
     {
         return $this->docBlockParser;
     }
@@ -52,12 +57,12 @@ class ParserContext
         return $this->prettyPrinter;
     }
 
-    public function addAlias($alias, $name)
+    public function addAlias(string $alias, string $name): void
     {
         $this->aliases[$alias] = $name;
     }
 
-    public function getAliases()
+    public function getAliases(): array
     {
         return $this->aliases;
     }
@@ -70,7 +75,7 @@ class ParserContext
         $this->classes = [];
     }
 
-    public function leaveFile()
+    public function leaveFile(): array
     {
         $this->hash = null;
         $this->file = null;
@@ -79,7 +84,7 @@ class ParserContext
         return $this->classes;
     }
 
-    public function getHash()
+    public function getHash(): ?string
     {
         return $this->hash;
     }
@@ -89,29 +94,29 @@ class ParserContext
         return $this->file;
     }
 
-    public function addErrors($name, $line, array $errors)
+    public function addErrors(string $name, int $line, array $errors): void
     {
         foreach ($errors as $error) {
             $this->addError($name, $line, $error);
         }
     }
 
-    public function addError($name, $line, $error)
+    public function addError(string $name, int $line, string $error): void
     {
         $this->errors[] = sprintf('%s on "%s" in %s:%d', $error, $name, $this->file, $line);
     }
 
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
 
-    public function enterClass(ClassReflection $class)
+    public function enterClass(ClassReflection $class): void
     {
         $this->class = $class;
     }
 
-    public function leaveClass()
+    public function leaveClass(): void
     {
         if (null === $this->class) {
             return;
@@ -121,7 +126,7 @@ class ParserContext
         $this->class = null;
     }
 
-    public function getClass()
+    public function getClass(): ?ClassReflection
     {
         return $this->class;
     }
@@ -132,7 +137,7 @@ class ParserContext
         $this->aliases = [];
     }
 
-    public function leaveNamespace()
+    public function leaveNamespace(): void
     {
         $this->namespace = null;
         $this->aliases = [];

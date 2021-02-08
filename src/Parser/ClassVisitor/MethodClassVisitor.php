@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -23,7 +23,7 @@ use Sami\Reflection\ParameterReflection;
  */
 class MethodClassVisitor implements ClassVisitorInterface
 {
-    public function visit(ClassReflection $class)
+    public function visit(ClassReflection $class): bool
     {
         $modified = false;
 
@@ -40,15 +40,17 @@ class MethodClassVisitor implements ClassVisitorInterface
     }
 
     /**
+     * @todo return only one type
+     *
      * Parse the parts of an @method tag into an associative array.
      *
      * Original @method parsing by https://github.com/phpDocumentor/ReflectionDocBlock/blob/master/src/phpDocumentor/Reflection/DocBlock/Tag/MethodTag.php
      *
      * @param string $tag Method tag contents
      *
-     * @return array
+     * @return bool|array
      */
-    protected function parseMethod($tag)
+    protected function parseMethod(string $tag): bool|array
     {
         // Account for default array syntax
         $tag = str_replace('array()', 'array', $tag);
@@ -102,7 +104,7 @@ class MethodClassVisitor implements ClassVisitorInterface
      *
      * @return bool
      */
-    protected function injectMethod(ClassReflection $class, $methodTag)
+    protected function injectMethod(ClassReflection $class, string $methodTag): bool
     {
         $data = $this->parseMethod($methodTag);
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -15,7 +15,8 @@ use Sami\Project;
 
 class ClassTraverser
 {
-    protected $visitors;
+    /** @var ClassVisitorInterface[]  */
+    protected array $visitors;
 
     public function __construct(array $visitors = [])
     {
@@ -25,12 +26,12 @@ class ClassTraverser
         }
     }
 
-    public function addVisitor(ClassVisitorInterface $visitor)
+    public function addVisitor(ClassVisitorInterface $visitor): void
     {
         $this->visitors[] = $visitor;
     }
 
-    public function traverse(Project $project)
+    public function traverse(Project $project): \SplObjectStorage
     {
         // parent classes/interfaces are visited before their "children"
         $classes = $project->getProjectClasses();

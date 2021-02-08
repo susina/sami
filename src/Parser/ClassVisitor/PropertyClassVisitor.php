@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -23,14 +23,14 @@ use Sami\Reflection\PropertyReflection;
  */
 class PropertyClassVisitor implements ClassVisitorInterface
 {
-    protected $context;
+    protected ParserContext $context;
 
     public function __construct(ParserContext $context)
     {
         $this->context = $context;
     }
 
-    public function visit(ClassReflection $class)
+    public function visit(ClassReflection $class): bool
     {
         $modified = false;
         $properties = $class->getTags('property');
@@ -53,7 +53,7 @@ class PropertyClassVisitor implements ClassVisitorInterface
      *
      * @return bool
      */
-    protected function injectProperty(ClassReflection $class, array $propertyTag)
+    protected function injectProperty(ClassReflection $class, array $propertyTag): bool
     {
         if (count($propertyTag) == 3 && !empty($propertyTag[1])) {
             $property = new PropertyReflection($propertyTag[1], $class->getLine());

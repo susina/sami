@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -17,7 +17,7 @@ class Indexer
     const TYPE_METHOD = 2;
     const TYPE_NAMESPACE = 3;
 
-    public function getIndex(Project $project)
+    public function getIndex(Project $project): array
     {
         $index = [
             'searchIndex' => [],
@@ -44,7 +44,7 @@ class Indexer
         return $index;
     }
 
-    protected function getSearchString($string)
+    protected function getSearchString(string $string): string
     {
         return strtolower(preg_replace("/\s+/", '', $string));
     }

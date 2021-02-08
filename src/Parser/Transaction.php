@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -16,25 +16,26 @@ use Sami\Reflection\ClassReflection;
 
 class Transaction
 {
-    protected $hashes;
-    protected $classes;
-    protected $visited;
-    protected $modified;
+    /** @var string[] */
+    protected array $hashes = [];
+
+    /** @var string[] */
+    protected array $classes = [];
+
+    /** @var string[] */
+    protected array $visited = [];
+
+    /** @var string[] */
+    protected array $modified = [];
 
     public function __construct(Project $project)
     {
-        $this->hashes = [];
-        $this->classes = [];
-
         foreach ($project->getProjectClasses() as $class) {
             $this->addClass($class);
         }
-
-        $this->visited = [];
-        $this->modified = [];
     }
 
-    public function hasHash($hash)
+    public function hasHash(string $hash): bool
     {
         if (!array_key_exists($hash, $this->hashes)) {
             return false;
@@ -45,12 +46,12 @@ class Transaction
         return true;
     }
 
-    public function getModifiedClasses()
+    public function getModifiedClasses(): array
     {
         return $this->modified;
     }
 
-    public function getRemovedClasses()
+    public function getRemovedClasses(): array
     {
         $classes = [];
         foreach ($this->hashes as $hash => $c) {
@@ -62,7 +63,7 @@ class Transaction
         return array_keys($classes);
     }
 
-    public function addClass(ClassReflection $class)
+    public function addClass(ClassReflection $class): void
     {
         $name = $class->getName();
         $hash = $class->getHash();

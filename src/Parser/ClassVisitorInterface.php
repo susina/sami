@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -15,5 +15,5 @@ use Sami\Reflection\ClassReflection;
 
 interface ClassVisitorInterface
 {
-    public function visit(ClassReflection $class);
+    public function visit(ClassReflection $class): bool;
 }

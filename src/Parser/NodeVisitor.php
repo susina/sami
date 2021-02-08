@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -34,14 +34,14 @@ use Sami\Reflection\PropertyReflection;
 
 class NodeVisitor extends NodeVisitorAbstract
 {
-    protected $context;
+    protected ParserContext $context;
 
     public function __construct(ParserContext $context)
     {
         $this->context = $context;
     }
 
-    public function enterNode(AbstractNode $node)
+    public function enterNode(AbstractNode $node): void
     {
         if ($node instanceof NamespaceNode) {
             $this->context->enterNamespace((string) $node->name);
@@ -64,7 +64,7 @@ class NodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    public function leaveNode(AbstractNode $node)
+    public function leaveNode(AbstractNode $node): void
     {
         if ($node instanceof NamespaceNode) {
             $this->context->leaveNamespace();
@@ -73,14 +73,14 @@ class NodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    protected function addAliases(UseNode $node)
+    protected function addAliases(UseNode $node): void
     {
         foreach ($node->uses as $use) {
             $this->context->addAlias($use->alias, (string) $use->name);
         }
     }
 
-    protected function addInterface(InterfaceNode $node)
+    protected function addInterface(InterfaceNode $node): void
     {
         $class = $this->addClassOrInterface($node);
 
@@ -90,7 +90,7 @@ class NodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    protected function addClass(ClassNode $node)
+    protected function addClass(ClassNode $node): void
     {
         // Skip anonymous classes
         if ($node->isAnonymous()) {
@@ -108,14 +108,14 @@ class NodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    protected function addTrait(TraitNode $node)
+    protected function addTrait(TraitNode $node): void
     {
         $class = $this->addClassOrInterface($node);
 
         $class->setTrait(true);
     }
 
-    protected function addClassOrInterface(ClassLikeNode $node)
+    protected function addClassOrInterface(ClassLikeNode $node): ClassReflection
     {
         $class = new ClassReflection((string) $node->namespacedName, $node->getLine());
         if ($node instanceof ClassNode) {
@@ -126,7 +126,7 @@ class NodeVisitor extends NodeVisitorAbstract
         $class->setHash($this->context->getHash());
         $class->setFile($this->context->getFile());
 
-        $comment = $this->context->getDocBlockParser()->parse($node->getDocComment(), $this->context, $class);
+        $comment = $this->context->getDocBlockParser()->parse($node->getDocComment(), $this->context);
         $class->setDocComment($node->getDocComment());
         $class->setShortDesc($comment->getShortDesc());
         $class->setLongDesc($comment->getLongDesc());
@@ -147,7 +147,7 @@ class NodeVisitor extends NodeVisitorAbstract
         return $class;
     }
 
-    protected function addMethod(ClassMethodNode $node)
+    protected function addMethod(ClassMethodNode $node): void
     {
         $method = new MethodReflection($node->name, $node->getLine());
         $method->setModifiers($node->flags);
@@ -193,7 +193,7 @@ class NodeVisitor extends NodeVisitorAbstract
             $method->addParameter($parameter);
         }
 
-        $comment = $this->context->getDocBlockParser()->parse($node->getDocComment(), $this->context, $method);
+        $comment = $this->context->getDocBlockParser()->parse($node->getDocComment(), $this->context);
         $method->setDocComment($node->getDocComment());
         $method->setShortDesc($comment->getShortDesc());
         $method->setLongDesc($comment->getLongDesc());
@@ -246,7 +246,7 @@ class NodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    protected function addProperty(PropertyNode $node)
+    protected function addProperty(PropertyNode $node): void
     {
         foreach ($node->props as $prop) {
             $property = new PropertyReflection($prop->name, $prop->getLine());
@@ -254,7 +254,7 @@ class NodeVisitor extends NodeVisitorAbstract
 
             $property->setDefault($prop->default);
 
-            $comment = $this->context->getDocBlockParser()->parse($node->getDocComment(), $this->context, $property);
+            $comment = $this->context->getDocBlockParser()->parse($node->getDocComment(), $this->context);
             $property->setDocComment($node->getDocComment());
             $property->setShortDesc($comment->getShortDesc());
             $property->setLongDesc($comment->getLongDesc());
@@ -287,11 +287,11 @@ class NodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    protected function addConstant(ClassConstNode $node)
+    protected function addConstant(ClassConstNode $node): void
     {
         foreach ($node->consts as $const) {
             $constant = new ConstantReflection($const->name, $const->getLine());
-            $comment = $this->context->getDocBlockParser()->parse($node->getDocComment(), $this->context, $constant);
+            $comment = $this->context->getDocBlockParser()->parse($node->getDocComment(), $this->context);
             $constant->setDocComment($node->getDocComment());
             $constant->setShortDesc($comment->getShortDesc());
             $constant->setLongDesc($comment->getLongDesc());
@@ -300,7 +300,7 @@ class NodeVisitor extends NodeVisitorAbstract
         }
     }
 
-    protected function updateMethodParametersFromTags(MethodReflection $method, array $tags)
+    protected function updateMethodParametersFromTags(MethodReflection $method, array $tags): array
     {
         // bypass if there is no @param tags defined (@param tags are optional)
         if (!count($tags)) {
@@ -333,7 +333,7 @@ class NodeVisitor extends NodeVisitorAbstract
         return [];
     }
 
-    protected function resolveHint($hints)
+    protected function resolveHint(array $hints): array
     {
         foreach ($hints as $i => $hint) {
             $hints[$i] = [$this->resolveAlias($hint[0]), $hint[1]];
@@ -342,7 +342,7 @@ class NodeVisitor extends NodeVisitorAbstract
         return $hints;
     }
 
-    protected function resolveAlias($alias)
+    protected function resolveAlias(string $alias): string
     {
         // not a class
         if (Project::isPhpTypeHint($alias)) {
@@ -379,7 +379,7 @@ class NodeVisitor extends NodeVisitorAbstract
         return $alias;
     }
 
-    protected function resolveSee(array $see)
+    protected function resolveSee(array $see): array
     {
         $return = [];
         $matches = [];

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -17,9 +17,9 @@ use PhpParser\Parser as PhpParser;
 
 class CodeParser
 {
-    protected $parser;
-    protected $traverser;
-    protected $context;
+    protected PhpParser $parser;
+    protected NodeTraverser $traverser;
+    protected ParserContext $context;
 
     public function __construct(ParserContext $context, PhpParser $parser, NodeTraverser $traverser)
     {
@@ -32,12 +32,12 @@ class CodeParser
         ini_set('xdebug.max_nesting_level', 10000);
     }
 
-    public function getContext()
+    public function getContext(): ParserContext
     {
         return $this->context;
     }
 
-    public function parse($code)
+    public function parse(string $code): void
     {
         try {
             $this->traverser->traverse($this->parser->parse($code));

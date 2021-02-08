@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -15,18 +15,18 @@ use Sami\Project;
 
 class ParameterReflection extends Reflection
 {
-    protected $method;
-    protected $byRef;
+    protected MethodReflection $method;
+    protected bool $byRef;
     protected $modifiers;
     protected $default;
     protected $variadic;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->method.'#'.$this->name;
     }
 
-    public function getClass()
+    public function getClass(): ClassReflection
     {
         return $this->method->getClass();
     }
@@ -36,17 +36,17 @@ class ParameterReflection extends Reflection
         $this->modifiers = $modifiers;
     }
 
-    public function setByRef($boolean)
+    public function setByRef(bool $boolean): void
     {
         $this->byRef = $boolean;
     }
 
-    public function isByRef()
+    public function isByRef(): bool
     {
         return $this->byRef;
     }
 
-    public function setDefault($default)
+    public function setDefault($default): void
     {
         $this->default = $default;
     }
@@ -56,7 +56,7 @@ class ParameterReflection extends Reflection
         return $this->default;
     }
 
-    public function setVariadic($variadic)
+    public function setVariadic($variadic): void
     {
         $this->variadic = $variadic;
     }
@@ -66,17 +66,17 @@ class ParameterReflection extends Reflection
         return $this->variadic;
     }
 
-    public function getMethod()
+    public function getMethod(): MethodReflection
     {
         return $this->method;
     }
 
-    public function setMethod(MethodReflection $method)
+    public function setMethod(MethodReflection $method): void
     {
         $this->method = $method;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'name' => $this->name,
@@ -92,7 +92,7 @@ class ParameterReflection extends Reflection
         ];
     }
 
-    public static function fromArray(Project $project, $array)
+    public static function fromArray(Project $project, array $array): ParameterReflection
     {
         $parameter = new self($array['name'], $array['line']);
         $parameter->shortDesc = $array['short_desc'];

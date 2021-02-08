@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -12,20 +12,23 @@
 namespace Sami\Reflection;
 
 use Sami\Project;
+use Stringable;
 
-class ClassReflection extends Reflection
+class ClassReflection extends Reflection implements Stringable
 {
     const CATEGORY_CLASS = 1;
     const CATEGORY_INTERFACE = 2;
     const CATEGORY_TRAIT = 3;
 
-    private static $categoryName = [
+    /** @var string[]  */
+    private static array $categoryName = [
         1 => 'class',
         2 => 'interface',
         3 => 'trait',
     ];
 
-    private static $phpInternalClasses = [
+    /** @var bool[]  */
+    private static array $phpInternalClasses = [
         'stdclass' => true,
         'exception' => true,
         'errorexception' => true,
@@ -198,52 +201,52 @@ class ClassReflection extends Reflection
         'reflector' => true,
     ];
 
-    /** @var Project */
-    protected $project;
+    protected Project $project;
 
-    protected $hash;
-    protected $namespace;
+    protected string $hash = '';
+    protected string $namespace = '';
     protected $modifiers;
-    protected $properties = [];
-    protected $methods = [];
-    protected $interfaces = [];
-    protected $constants = [];
-    protected $traits = [];
-    protected $parent;
+    protected array $properties = [];
+    protected array $methods = [];
+    protected array $interfaces = [];
+    protected array $constants = [];
+    protected array $traits = [];
+    protected $parent = null;
     protected $file;
     protected $relativeFilePath;
-    protected $category = self::CATEGORY_CLASS;
-    protected $projectClass = true;
-    protected $aliases = [];
-    protected $errors = [];
-    protected $fromCache = false;
+    protected int $category = self::CATEGORY_CLASS;
+    protected bool $projectClass = true;
+    protected array $aliases = [];
+    protected array $errors = [];
+    protected bool $fromCache = false;
 
     public function __toString()
     {
         return $this->name;
     }
 
-    public function getClass()
+    public function getClass(): self
     {
         return $this;
     }
 
-    public function isProjectClass()
+    public function isProjectClass(): bool
     {
         return $this->projectClass;
     }
 
-    public function isPhpClass()
+    public function isPhpClass(): bool
     {
         return isset(self::$phpInternalClasses[strtolower($this->name)]);
     }
 
-    public function setName($name)
+    //@todo add property type when bump phpDocumentor deps
+    public function setName($name): void
     {
         parent::setName(ltrim($name, '\\'));
     }
 
-    public function getShortName()
+    public function getShortName(): string
     {
         if (false !== $pos = strrpos($this->name, '\\')) {
             return substr($this->name, $pos + 1);
@@ -252,22 +255,22 @@ class ClassReflection extends Reflection
         return $this->name;
     }
 
-    public function isAbstract()
+    public function isAbstract(): bool
     {
         return self::MODIFIER_ABSTRACT === (self::MODIFIER_ABSTRACT & $this->modifiers);
     }
 
-    public function isFinal()
+    public function isFinal(): bool
     {
         return self::MODIFIER_FINAL === (self::MODIFIER_FINAL & $this->modifiers);
     }
 
-    public function getHash()
+    public function getHash(): string
     {
         return $this->hash;
     }
 
-    public function setHash($hash)
+    public function setHash(string $hash): void
     {
         $this->hash = $hash;
     }
@@ -277,11 +280,13 @@ class ClassReflection extends Reflection
         return $this->file;
     }
 
+    //@todo string?
     public function setFile($file)
     {
         $this->file = $file;
     }
 
+    //@todo string?
     public function setRelativeFilePath($relativeFilePath)
     {
         $this->relativeFilePath = $relativeFilePath;
@@ -292,7 +297,7 @@ class ClassReflection extends Reflection
         return $this->relativeFilePath;
     }
 
-    public function getSourcePath($line = null)
+    public function getSourcePath($line = null): string
     {
         if (null === $this->relativeFilePath) {
             return '';
@@ -304,7 +309,7 @@ class ClassReflection extends Reflection
     /**
      * @return Project
      */
-    public function getProject()
+    public function getProject(): Project
     {
         return $this->project;
     }
@@ -314,12 +319,12 @@ class ClassReflection extends Reflection
         $this->project = $project;
     }
 
-    public function setNamespace($namespace)
+    public function setNamespace(string $namespace)
     {
         $this->namespace = ltrim($namespace, '\\');
     }
 
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return $this->namespace;
     }
@@ -329,13 +334,13 @@ class ClassReflection extends Reflection
         $this->modifiers = $modifiers;
     }
 
-    public function addProperty(PropertyReflection $property)
+    public function addProperty(PropertyReflection $property): void
     {
         $this->properties[$property->getName()] = $property;
         $property->setClass($this);
     }
 
-    public function getProperties($deep = false)
+    public function getProperties(bool $deep = false): array
     {
         if (false === $deep) {
             return $this->properties;
@@ -364,18 +369,18 @@ class ClassReflection extends Reflection
     /*
      * Can be any iterator (so that we can lazy-load the properties)
      */
-    public function setProperties($properties)
+    public function setProperties($properties): void
     {
         $this->properties = $properties;
     }
 
-    public function addConstant(ConstantReflection $constant)
+    public function addConstant(ConstantReflection $constant): void
     {
         $this->constants[$constant->getName()] = $constant;
         $constant->setClass($this);
     }
 
-    public function getConstants($deep = false)
+    public function getConstants(bool $deep = false): array
     {
         if (false === $deep) {
             return $this->constants;
@@ -395,12 +400,12 @@ class ClassReflection extends Reflection
         return $constants;
     }
 
-    public function setConstants($constants)
+    public function setConstants($constants): void
     {
         $this->constants = $constants;
     }
 
-    public function addMethod(MethodReflection $method)
+    public function addMethod(MethodReflection $method): void
     {
         $this->methods[$method->getName()] = $method;
         $method->setClass($this);
@@ -430,7 +435,7 @@ class ClassReflection extends Reflection
         }
     }
 
-    public function getMethods($deep = false)
+    public function getMethods(bool $deep = false): array
     {
         if (false === $deep) {
             return $this->methods;
@@ -464,17 +469,17 @@ class ClassReflection extends Reflection
         return $methods;
     }
 
-    public function setMethods($methods)
+    public function setMethods($methods): void
     {
         $this->methods = $methods;
     }
 
-    public function addInterface($interface)
+    public function addInterface($interface): void
     {
         $this->interfaces[$interface] = $interface;
     }
 
-    public function getInterfaces($deep = false)
+    public function getInterfaces(bool $deep = false)
     {
         $interfaces = [];
         foreach ($this->interfaces as $interface) {
@@ -497,12 +502,12 @@ class ClassReflection extends Reflection
         return $allInterfaces;
     }
 
-    public function addTrait($trait)
+    public function addTrait($trait): void
     {
         $this->traits[$trait] = $trait;
     }
 
-    public function getTraits($deep = false)
+    public function getTraits(bool $deep = false): array
     {
         $traits = [];
         foreach ($this->traits as $trait) {
@@ -525,17 +530,17 @@ class ClassReflection extends Reflection
         return $allTraits;
     }
 
-    public function setTraits($traits)
+    public function setTraits($traits): void
     {
         $this->traits = $traits;
     }
 
-    public function setParent($parent)
+    public function setParent($parent): void
     {
         $this->parent = $parent;
     }
 
-    public function getParent($deep = false)
+    public function getParent(bool $deep = false)
     {
         if (!$this->parent) {
             return $deep ? [] : null;
@@ -550,32 +555,32 @@ class ClassReflection extends Reflection
         return array_merge([$parent], $parent->getParent(true));
     }
 
-    public function setInterface($boolean)
+    public function setInterface(bool $boolean): void
     {
         $this->category = $boolean ? self::CATEGORY_INTERFACE : self::CATEGORY_CLASS;
     }
 
-    public function isInterface()
+    public function isInterface(): bool
     {
         return self::CATEGORY_INTERFACE === $this->category;
     }
 
-    public function setTrait($boolean)
+    public function setTrait(bool $boolean): void
     {
         $this->category = $boolean ? self::CATEGORY_TRAIT : self::CATEGORY_CLASS;
     }
 
-    public function isTrait()
+    public function isTrait(): bool
     {
         return self::CATEGORY_TRAIT === $this->category;
     }
 
-    public function setCategory($category)
+    public function setCategory($category): void
     {
         $this->category = $category;
     }
 
-    public function isException()
+    public function isException(): bool
     {
         $parent = $this;
         while ($parent = $parent->getParent()) {
@@ -587,37 +592,37 @@ class ClassReflection extends Reflection
         return false;
     }
 
-    public function getAliases()
+    public function getAliases(): array
     {
         return $this->aliases;
     }
 
-    public function setAliases($aliases)
+    public function setAliases($aliases): void
     {
         $this->aliases = $aliases;
     }
 
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
 
-    public function setErrors($errors)
+    public function setErrors($errors):void
     {
         $this->errors = $errors;
     }
 
-    public function isFromCache()
+    public function isFromCache(): bool
     {
         return $this->fromCache;
     }
 
-    public function notFromCache()
+    public function notFromCache(): void
     {
         $this->fromCache = false;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'name' => $this->name,
@@ -650,7 +655,7 @@ class ClassReflection extends Reflection
         ];
     }
 
-    public static function fromArray(Project $project, $array)
+    public static function fromArray(Project $project, array $array): ClassReflection
     {
         $class = new self($array['name'], $array['line']);
         $class->shortDesc = $array['short_desc'];
@@ -693,12 +698,12 @@ class ClassReflection extends Reflection
         return $class;
     }
 
-    public function getCategoryName()
+    public function getCategoryName(): string
     {
         return self::$categoryName[$this->category];
     }
 
-    public function sortInterfaces($sort)
+    public function sortInterfaces($sort): void
     {
         if (is_callable($sort)) {
             uksort($this->interfaces, $sort);

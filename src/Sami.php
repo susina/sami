@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -31,12 +31,13 @@ use Sami\Renderer\TwigExtension;
 use Sami\Store\JsonStore;
 use Sami\Version\SingleVersionCollection;
 use Sami\Version\Version;
+use Symfony\Component\Finder\Iterator\FilterIterator;
 
 class Sami extends Container
 {
-    const VERSION = '4.0.14-DEV';
+    const VERSION = '5.0-DEV';
 
-    public function __construct($iterator = null, array $config = [])
+    public function __construct(?FilterIterator $iterator = null, array $config = [])
     {
         parent::__construct();
 

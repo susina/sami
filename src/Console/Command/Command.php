@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -27,25 +27,25 @@ abstract class Command extends BaseCommand
 {
     const PARSE_ERROR = 64;
 
-    protected $sami;
+    protected Sami $sami;
     protected $version;
     protected $started;
     protected $diffs = [];
     protected $transactions = [];
     protected $errors = [];
-    protected $input;
-    protected $output;
+    protected InputInterface $input;
+    protected OutputInterface $output;
 
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->getDefinition()->addArgument(new InputArgument('config', InputArgument::REQUIRED, 'The configuration'));
         $this->getDefinition()->addOption(new InputOption('only-version', '', InputOption::VALUE_REQUIRED, 'The version to build'));
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->input = $input;
         $this->output = $output;
@@ -72,7 +72,7 @@ abstract class Command extends BaseCommand
         }
     }
 
-    public function update(Project $project)
+    public function update(Project $project): int
     {
         $callback = $this->output->isDecorated() ? [$this, 'messageCallback'] : null;
 
@@ -84,7 +84,7 @@ abstract class Command extends BaseCommand
         return count($this->errors) ? self::PARSE_ERROR : 0;
     }
 
-    public function parse(Project $project)
+    public function parse(Project $project): int
     {
         $project->parse([$this, 'messageCallback'], $this->input->getOption('force'));
 
@@ -93,7 +93,7 @@ abstract class Command extends BaseCommand
         return count($this->errors) ? self::PARSE_ERROR : 0;
     }
 
-    public function render(Project $project)
+    public function render(Project $project): int
     {
         $project->render([$this, 'messageCallback'], $this->input->getOption('force'));
 
@@ -102,7 +102,7 @@ abstract class Command extends BaseCommand
         return count($this->errors) ? self::PARSE_ERROR : 0;
     }
 
-    public function messageCallback($message, $data)
+    public function messageCallback(string $message, $data)
     {
         switch ($message) {
             case Message::PARSE_CLASS:
@@ -135,7 +135,7 @@ abstract class Command extends BaseCommand
         }
     }
 
-    public function renderProgressBar($percent, $length)
+    public function renderProgressBar(int $percent, int $length): string
     {
         return
             str_repeat('#', floor($percent / 100 * $length))

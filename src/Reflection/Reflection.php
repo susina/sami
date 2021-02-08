@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -23,17 +23,17 @@ abstract class Reflection
     const MODIFIER_FINAL = 32;
     const VISIBILITY_MODIFER_MASK = 7; // 1 | 2 | 4
 
-    protected $name;
-    protected $line;
-    protected $shortDesc;
-    protected $longDesc;
+    protected string $name;
+    protected int $line;
+    protected ?string $shortDesc = '';
+    protected string $longDesc = '';
     protected $hint;
-    protected $hintDesc;
-    protected $tags;
+    protected string $hintDesc = '';
+    protected array $tags;
     protected $docComment;
     protected $see = [];
 
-    public function __construct($name, $line)
+    public function __construct(string $name, int $line)
     {
         $this->name = $name;
         $this->line = $line;
@@ -42,47 +42,47 @@ abstract class Reflection
 
     abstract public function getClass();
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getLine()
+    public function getLine(): int
     {
         return $this->line;
     }
 
-    public function setLine($line)
+    public function setLine(int $line): void
     {
         $this->line = $line;
     }
 
-    public function getShortDesc()
+    public function getShortDesc(): string
     {
         return $this->shortDesc;
     }
 
-    public function setShortDesc($shortDesc)
+    public function setShortDesc(?string $shortDesc): void
     {
         $this->shortDesc = $shortDesc;
     }
 
-    public function getLongDesc()
+    public function getLongDesc(): string
     {
         return $this->longDesc;
     }
 
-    public function setLongDesc($longDesc)
+    public function setLongDesc(string $longDesc): void
     {
         $this->longDesc = $longDesc;
     }
 
-    public function getHint()
+    public function getHint(): array
     {
         if (!$this->hint) {
             return [];
@@ -97,7 +97,7 @@ abstract class Reflection
         return $hints;
     }
 
-    public function getHintAsString()
+    public function getHintAsString(): string
     {
         $str = [];
         foreach ($this->getHint() as $hint) {
@@ -107,7 +107,7 @@ abstract class Reflection
         return implode('|', $str);
     }
 
-    public function hasHint()
+    public function hasHint(): bool
     {
         return $this->hint ? true : false;
     }
@@ -122,32 +122,32 @@ abstract class Reflection
         return $this->hint;
     }
 
-    public function setHintDesc($desc)
+    public function setHintDesc(string $desc): void
     {
         $this->hintDesc = $desc;
     }
 
-    public function getHintDesc()
+    public function getHintDesc(): string
     {
         return $this->hintDesc;
     }
 
-    public function setTags($tags)
+    public function setTags(array $tags): void
     {
         $this->tags = $tags;
     }
 
-    public function getTags($name)
+    public function getTags(string $name): array
     {
         return $this->tags[$name] ?? [];
     }
 
-    public function getDeprecated()
+    public function getDeprecated(): array
     {
         return $this->getTags('deprecated');
     }
 
-    public function getTodo()
+    public function getTodo(): array
     {
         return $this->getTags('todo');
     }
@@ -166,7 +166,7 @@ abstract class Reflection
     /**
      * @return array
      */
-    public function getSee()
+    public function getSee(): array
     {
         $see = [];
         /* @var $project Project */
@@ -193,7 +193,7 @@ abstract class Reflection
         $this->see = $see;
     }
 
-    private function prepareMethodSee(array $seeElem)
+    private function prepareMethodSee(array $seeElem): array
     {
         /* @var $project Project */
         $project = $this->getClass()->getProject();
