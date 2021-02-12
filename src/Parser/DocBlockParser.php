@@ -11,26 +11,34 @@
 
 namespace Sami\Parser;
 
-use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlock\Tag;
+use gossi\docblock\Docblock;
+use gossi\docblock\tags\AbstractTag;
+use gossi\docblock\tags\AuthorTag;
+use gossi\docblock\tags\ParamTag;
+use gossi\docblock\tags\PropertyReadTag;
+use gossi\docblock\tags\PropertyTag;
+use gossi\docblock\tags\PropertyWriteTag;
+use gossi\docblock\tags\ReturnTag;
+use gossi\docblock\tags\SeeTag;
+use gossi\docblock\tags\TagFactory;
+use gossi\docblock\tags\ThrowsTag;
+use gossi\docblock\tags\VarTag;
 use Sami\Parser\Node\DocBlockNode;
 
 class DocBlockParser
 {
     /**
      * @param mixed         $comment
-     * @param ParserContext $context
      *
      * @return DocBlockNode
      */
-    public function parse(mixed $comment, ParserContext $context): DocBlockNode
+    public function parse(mixed $comment): DocBlockNode
     {
         $docBlock = null;
         $errorMessage = '';
 
         try {
-            $docBlockContext = new DocBlock\Context($context->getNamespace(), $context->getAliases() ?: []);
-            $docBlock = new DocBlock((string) $comment, $docBlockContext);
+            $docBlock = new Docblock((string) $comment);
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
         }
@@ -44,48 +52,50 @@ class DocBlockParser
         }
 
         $result->setShortDesc($docBlock->getShortDescription());
-        $result->setLongDesc((string) $docBlock->getLongDescription());
+        $result->setLongDesc($docBlock->getLongDescription());
 
         foreach ($docBlock->getTags() as $tag) {
-            $result->addTag($tag->getName(), $this->parseTag($tag));
+            $result->addTag($tag->getTagName(), $this->parseTag($tag));
         }
 
         return $result;
     }
 
-    public function getTag(string $string): Tag
+    public function getTag(string $string): AbstractTag
     {
-        return Tag::createInstance($string);
+        return TagFactory::create($string);
     }
 
-    protected function parseTag(DocBlock\Tag $tag): array|string
+    protected function parseTag(AbstractTag $tag): array|string
     {
-        return match (substr(get_class($tag), 38)) {
-            'VarTag', 'ReturnTag' => [
-                $this->parseHint($tag->getTypes()),
+        return match ($tag::class) {
+            VarTag::class, ReturnTag::class => [
+                $this->parseHint($tag->getType()),
                 $tag->getDescription(),
             ],
-            'PropertyTag', 'PropertyReadTag', 'PropertyWriteTag', 'ParamTag' => [
-                $this->parseHint($tag->getTypes()),
-                ltrim($tag->getVariableName(), '$'),
+            PropertyTag::class, PropertyReadTag::class, PropertyWriteTag::class, ParamTag::class => [
+                $this->parseHint($tag->getType()),
+                $tag->getVariable(),
                 $tag->getDescription(),
             ],
-            'ThrowsTag' => [
+            ThrowsTag::class => [
                 $tag->getType(),
                 $tag->getDescription(),
             ],
-            'SeeTag' => [
-                $tag->getContent(),
+            SeeTag::class => [
+                $tag->getReference() . ' ' . $tag->getDescription(),
                 $tag->getReference(),
                 $tag->getDescription(),
             ],
-            default => $tag->getContent(),
+            default => ltrim((string) $tag, "@{$tag->getTagName()} ")
         };
     }
 
-    protected function parseHint(array $rawHints): array
+    protected function parseHint(string $type): array
     {
         $hints = [];
+        $rawHints = array_filter(explode('|', $type), 'trim');
+
         foreach ($rawHints as $hint) {
             if ('[]' == substr($hint, -2)) {
                 $hints[] = [substr($hint, 0, -2), true];

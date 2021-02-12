@@ -24,7 +24,7 @@ class DocBlockParserTest extends TestCase
     {
         $parser = new DocBlockParser();
 
-        $this->assertEquals($this->createDocblock($expected), $parser->parse($comment, $this->getContextMock()));
+        $this->assertEquals($this->createDocblock($expected), $parser->parse($comment));
     }
 
     public function getParseTests()
@@ -114,7 +114,7 @@ class DocBlockParserTest extends TestCase
                     'tags' => [
                         'var' => [ // Array from found tags.
                             [ // First found tag.
-                                [['\SingleClass', false], ['\MultipleClass', true]], // Array from data types.
+                                [['SingleClass', false], ['\MultipleClass', true]], // Array from data types.
                                 'Property Description',
                             ],
                         ],
@@ -130,7 +130,7 @@ class DocBlockParserTest extends TestCase
                     'tags' => [
                         'param' => [ // Array from found tags.
                             [ // First found tag.
-                                [['\SingleClass', false], ['\MultipleClass', true]], // Array from data types.
+                                [['SingleClass', false], ['\MultipleClass', true]], // Array from data types.
                                 'paramName',
                                 'Param Description',
                             ],
@@ -146,15 +146,13 @@ class DocBlockParserTest extends TestCase
                 ',
                 [
                     'tags' => [
-                        'throw' => [ // Array from found tags.
+                        'throws' => [ // Array from found tags.
                             [ // First found tag.
-                                '\SingleClass1',
+                                'SingleClass1',
                                 'Exception Description One',
                             ],
-                        ],
-                        'throws' => [ // Array from found tags.
                             [ // Second found tag.
-                                '\SingleClass2',
+                                'SingleClass2',
                                 'Exception Description Two',
                             ],
                         ],
@@ -170,7 +168,7 @@ class DocBlockParserTest extends TestCase
                     'tags' => [
                         'return' => [ // Array from found tags.
                             [ // First found tag.
-                                [['\SingleClass', false], ['\MultipleClass', true]], // Array from data types.
+                                [['SingleClass', false], ['\MultipleClass', true]], // Array from data types.
                                 'Return Description',
                             ],
                         ],
@@ -276,14 +274,5 @@ class DocBlockParserTest extends TestCase
         }
 
         return $docblock;
-    }
-
-    private function getContextMock()
-    {
-        $contextMock = $this->getMockBuilder('Sami\Parser\ParserContext')->disableOriginalConstructor()->getMock();
-        $contextMock->expects($this->once())->method('getNamespace')->will($this->returnValue(''));
-        $contextMock->expects($this->once())->method('getAliases')->will($this->returnValue([]));
-
-        return $contextMock;
     }
 }

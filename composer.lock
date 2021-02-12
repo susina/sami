@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb2b67d0c8f0d107c3ddb6355f5532ec",
+    "content-hash": "8a38b092317f49a6b1c7d084b9684b3f",
     "packages": [
         {
             "name": "blackfire/php-sdk",
@@ -153,6 +153,58 @@
             "time": "2021-01-12T12:10:35+00:00"
         },
         {
+            "name": "gossi/docblock",
+            "version": "v2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gossi/docblock.git",
+                "reference": "70beb47cab8ded7e068548b78deba33cf71dc205"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gossi/docblock/zipball/70beb47cab8ded7e068548b78deba33cf71dc205",
+                "reference": "70beb47cab8ded7e068548b78deba33cf71dc205",
+                "shasum": ""
+            },
+            "require": {
+                "phootwork/collection": "^2.0",
+                "phootwork/lang": "^2.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phootwork/php-cs-fixer-config": "^0.2.2",
+                "phpunit/phpunit": "^8.0",
+                "vimeo/psalm": "^3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "gossi\\docblock\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Gossmann",
+                    "homepage": "http://gos.si"
+                }
+            ],
+            "description": "PHP Docblock parser and generator. An API to read and write Docblocks.",
+            "keywords": [
+                "docblock",
+                "generator",
+                "parser"
+            ],
+            "support": {
+                "issues": "https://github.com/gossi/docblock/issues",
+                "source": "https://github.com/gossi/docblock/tree/master"
+            },
+            "time": "2020-04-09T07:05:50+00:00"
+        },
+        {
             "name": "michelf/php-markdown",
             "version": "1.9.0",
             "source": {
@@ -262,40 +314,27 @@
             "time": "2020-12-20T10:01:03+00:00"
         },
         {
-            "name": "phpdocumentor/reflection-docblock",
-            "version": "2.0.5",
+            "name": "phootwork/collection",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "e6a969a640b00d8daa3c66518b0405fb41ae0c4b"
+                "url": "https://github.com/phootwork/collection.git",
+                "reference": "d58a0d7186074b601b016b9878b6fb65f6c23648"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/e6a969a640b00d8daa3c66518b0405fb41ae0c4b",
-                "reference": "e6a969a640b00d8daa3c66518b0405fb41ae0c4b",
+                "url": "https://api.github.com/repos/phootwork/collection/zipball/d58a0d7186074b601b016b9878b6fb65f6c23648",
+                "reference": "d58a0d7186074b601b016b9878b6fb65f6c23648",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "suggest": {
-                "dflydev/markdown": "~1.0",
-                "erusev/parsedown": "~1.0"
+                "phootwork/lang": "^2.0",
+                "php": ">=7.2"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
             "autoload": {
-                "psr-0": {
-                    "phpDocumentor": [
-                        "src/"
-                    ]
+                "psr-4": {
+                    "phootwork\\collection\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -304,15 +343,78 @@
             ],
             "authors": [
                 {
-                    "name": "Mike van Riel",
-                    "email": "mike.vanriel@naenius.com"
+                    "name": "Thomas Gossmann",
+                    "homepage": "http://gos.si"
                 }
             ],
+            "description": "The phootwork library fills gaps in the php language and provides better solutions than the existing ones php offers.",
+            "homepage": "https://phootwork.github.io/collection/",
+            "keywords": [
+                "Array object",
+                "Text object",
+                "collection",
+                "collections",
+                "json",
+                "list",
+                "map",
+                "queue",
+                "set",
+                "stack",
+                "xml"
+            ],
             "support": {
-                "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/release/2.x"
+                "issues": "https://github.com/phootwork/phootwork/issues",
+                "source": "https://github.com/phootwork/collection/tree/v2.1.2"
             },
-            "time": "2016-01-25T08:17:30+00:00"
+            "time": "2020-09-17T16:04:53+00:00"
+        },
+        {
+            "name": "phootwork/lang",
+            "version": "v2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phootwork/lang.git",
+                "reference": "835b63faf1ed3b577d76e4a879c0d8a5a4df4c77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phootwork/lang/zipball/835b63faf1ed3b577d76e4a879c0d8a5a4df4c77",
+                "reference": "835b63faf1ed3b577d76e4a879c0d8a5a4df4c77",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "symfony/polyfill-mbstring": "^1.12"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "phootwork\\lang\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Gossmann",
+                    "homepage": "http://gos.si"
+                }
+            ],
+            "description": "Missing PHP language constructs",
+            "homepage": "https://phootwork.github.io/lang/",
+            "keywords": [
+                "array",
+                "comparator",
+                "comparison",
+                "string"
+            ],
+            "support": {
+                "issues": "https://github.com/phootwork/phootwork/issues",
+                "source": "https://github.com/phootwork/lang/tree/v2.1.2"
+            },
+            "time": "2020-12-24T15:35:00+00:00"
         },
         {
             "name": "pimple/pimple",
