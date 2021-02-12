@@ -11,6 +11,7 @@
 
 namespace Sami\Reflection;
 
+use PhpParser\Node\Identifier;
 use Sami\Project;
 
 abstract class Reflection
@@ -33,9 +34,9 @@ abstract class Reflection
     protected $docComment;
     protected $see = [];
 
-    public function __construct(string $name, int $line)
+    public function __construct(string|Identifier $name, int $line)
     {
-        $this->name = $name;
+        $this->name = (string) $name;
         $this->line = $line;
         $this->tags = [];
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -13,34 +13,28 @@ namespace Sami\Parser\Node;
 
 class DocBlockNode
 {
-    protected $shortDesc;
-    protected $longDesc;
-    protected $tags = [];
-    protected $errors = [];
+    protected string $shortDesc = '';
+    protected string $longDesc = '';
+    protected array $tags = [];
+    protected array $errors = [];
 
-    public function addTag($key, $value)
+    public function addTag(string $key, mixed $value): void
     {
         $this->tags[$key][] = $value;
     }
 
-    public function getTags()
+    public function getTags(): array
     {
         return $this->tags;
     }
 
-    public function getOtherTags()
+    public function getOtherTags(): array
     {
         $tags = $this->tags;
         unset($tags['param'], $tags['return'], $tags['var'], $tags['throws']);
 
         foreach ($tags as $name => $values) {
             foreach ($values as $i => $value) {
-                // For 'see' tag we try to maintain backwards compatibility
-                // by returning only a part of the value.
-                if ($name === 'see') {
-                    $value = $value[0];
-                }
-
                 $tags[$name][$i] = is_string($value) ? explode(' ', $value) : $value;
             }
         }
@@ -48,42 +42,42 @@ class DocBlockNode
         return $tags;
     }
 
-    public function getTag($key)
+    public function getTag(string $key): array
     {
         return $this->tags[$key] ?? [];
     }
 
-    public function getShortDesc()
+    public function getShortDesc(): string
     {
         return $this->shortDesc;
     }
 
-    public function getLongDesc()
+    public function getLongDesc(): string
     {
         return $this->longDesc;
     }
 
-    public function setShortDesc($shortDesc)
+    public function setShortDesc(string $shortDesc): void
     {
         $this->shortDesc = $shortDesc;
     }
 
-    public function setLongDesc($longDesc)
+    public function setLongDesc(string $longDesc): void
     {
         $this->longDesc = $longDesc;
     }
 
-    public function getDesc()
+    public function getDesc(): string
     {
         return $this->shortDesc."\n\n".$this->longDesc;
     }
 
-    public function addError($error)
+    public function addError($error): void
     {
         $this->errors[] = $error;
     }
 
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }

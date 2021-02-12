@@ -21,7 +21,7 @@ class ParserContext
     protected DocBlockParser $docBlockParser;
     protected $prettyPrinter;
     protected array $errors = [];
-    protected $namespace;
+    protected string $namespace = '';
 
     /** @var string[] */
     protected array $aliases = [];

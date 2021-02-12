@@ -413,7 +413,7 @@ class ClassReflection extends Reflection implements Stringable
 
     public function getMethod($name)
     {
-        return $this->methods[$name] ?? false;
+        return $this->methods[(string) $name] ?? false;
     }
 
     public function getParentMethod($name)

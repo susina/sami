@@ -154,7 +154,7 @@ class NodeVisitor extends NodeVisitorAbstract
         $method->setByRef((string) $node->byRef);
 
         foreach ($node->params as $param) {
-            $parameter = new ParameterReflection($param->name, $param->getLine());
+            $parameter = new ParameterReflection(ltrim($param->var, '$'), $param->getLine());
             $parameter->setModifiers($param->type);
             $parameter->setByRef($param->byRef);
             if ($param->default) {
