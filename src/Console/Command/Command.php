@@ -28,11 +28,11 @@ abstract class Command extends BaseCommand
     const PARSE_ERROR = 64;
 
     protected Sami $sami;
-    protected $version;
+    protected string $version;
     protected $started;
-    protected $diffs = [];
-    protected $transactions = [];
-    protected $errors = [];
+    protected array $diffs = [];
+    protected array $transactions = [];
+    protected array $errors = [];
     protected InputInterface $input;
     protected OutputInterface $output;
 
@@ -144,7 +144,7 @@ abstract class Command extends BaseCommand
         ;
     }
 
-    public function displayParseProgress($progress, $class)
+    public function displayParseProgress($progress, $class): void
     {
         if ($this->started) {
             $this->output->isDecorated() and $this->output->write("\033[2A");
@@ -161,7 +161,7 @@ abstract class Command extends BaseCommand
         );
     }
 
-    public function displayRenderProgress($section, $message, $progression)
+    public function displayRenderProgress($section, $message, $progression): void
     {
         if ($this->started) {
             $this->output->isDecorated() and $this->output->write("\033[2A");
@@ -176,7 +176,7 @@ abstract class Command extends BaseCommand
         ));
     }
 
-    public function displayParseEnd(Transaction $transaction)
+    public function displayParseEnd(Transaction $transaction): void
     {
         if (!$this->started) {
             return;
@@ -193,7 +193,7 @@ abstract class Command extends BaseCommand
         }
     }
 
-    public function displayRenderEnd(Diff $diff)
+    public function displayRenderEnd(Diff $diff): void
     {
         if (!$this->started) {
             return;
@@ -202,7 +202,7 @@ abstract class Command extends BaseCommand
         $this->output->isDecorated() and $this->output->write("\033[2A<info>  Rendering done</info>\033[K\n\033[K\n\033[1A");
     }
 
-    public function displayParseSummary()
+    public function displayParseSummary(): void
     {
         if (count($this->transactions) <= 0) {
             return;
@@ -217,7 +217,7 @@ abstract class Command extends BaseCommand
         $this->output->writeln('');
     }
 
-    public function displayRenderSummary()
+    public function displayRenderSummary(): void
     {
         if (count($this->diffs) <= 0) {
             return;
@@ -238,12 +238,12 @@ abstract class Command extends BaseCommand
         $this->output->writeln('');
     }
 
-    public function displaySwitch()
+    public function displaySwitch(): void
     {
         $this->output->writeln(sprintf("\n<fg=cyan>Version %s</>", $this->version));
     }
 
-    private function loadSami(string $config)
+    private function loadSami(string $config): Sami
     {
         return require $config;
     }

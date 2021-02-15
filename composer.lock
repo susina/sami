@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f64f53230dfd43b8d8bda09bcaaca547",
+    "content-hash": "a8c151dae3590cc916218cdd304bf355",
     "packages": [
         {
             "name": "blackfire/php-sdk",
@@ -2555,6 +2555,41 @@
                 }
             ],
             "time": "2021-02-02T14:45:58+00:00"
+        },
+        {
+            "name": "psalm/phar",
+            "version": "4.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/psalm/phar.git",
+                "reference": "ef4bd044508a1d44949c234ebc22b9719a0b399c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/ef4bd044508a1d44949c234ebc22b9719a0b399c",
+                "reference": "ef4bd044508a1d44949c234ebc22b9719a0b399c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "conflict": {
+                "vimeo/psalm": "*"
+            },
+            "bin": [
+                "psalm.phar"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Composer-based Psalm Phar",
+            "support": {
+                "issues": "https://github.com/psalm/phar/issues",
+                "source": "https://github.com/psalm/phar/tree/refs/tags/4.5.2"
+            },
+            "time": "2021-02-13T22:04:34+00:00"
         },
         {
             "name": "sebastian/cli-parser",

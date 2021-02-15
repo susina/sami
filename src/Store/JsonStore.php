@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -21,11 +21,11 @@ class JsonStore implements StoreInterface
     const JSON_PRETTY_PRINT = 128;
 
     /**
-     * @return ReflectionClass A ReflectionClass instance
+     * @return ClassReflection A ReflectionClass instance
      *
      * @throws \InvalidArgumentException if the class does not exist in the store
      */
-    public function readClass(Project $project, $name)
+    public function readClass(Project $project, string $name): ClassReflection
     {
         if (!file_exists($this->getFilename($project, $name))) {
             throw new \InvalidArgumentException(sprintf('File "%s" for class "%s" does not exist.', $this->getFilename($project, $name), $name));
@@ -34,7 +34,7 @@ class JsonStore implements StoreInterface
         return ClassReflection::fromArray($project, json_decode(file_get_contents($this->getFilename($project, $name)), true));
     }
 
-    public function removeClass(Project $project, $name)
+    public function removeClass(Project $project, string $name): void
     {
         if (!file_exists($this->getFilename($project, $name))) {
             throw new \RuntimeException(sprintf('Unable to remove the "%s" class.', $name));
@@ -43,12 +43,12 @@ class JsonStore implements StoreInterface
         unlink($this->getFilename($project, $name));
     }
 
-    public function writeClass(Project $project, ClassReflection $class)
+    public function writeClass(Project $project, ClassReflection $class): void
     {
         file_put_contents($this->getFilename($project, $class->getName()), json_encode($class->toArray(), self::JSON_PRETTY_PRINT));
     }
 
-    public function readProject(Project $project)
+    public function readProject(Project $project): array
     {
         $classes = [];
         foreach (Finder::create()->name('c_*.json')->in($this->getStoreDir($project)) as $file) {
@@ -58,20 +58,20 @@ class JsonStore implements StoreInterface
         return $classes;
     }
 
-    public function flushProject(Project $project)
+    public function flushProject(Project $project): void
     {
         $filesystem = new Filesystem();
         $filesystem->remove($this->getStoreDir($project));
     }
 
-    protected function getFilename($project, $name)
+    protected function getFilename(Project $project, string $name): string
     {
         $dir = $this->getStoreDir($project);
 
         return $dir.'/c_'.md5($name).'.json';
     }
 
-    protected function getStoreDir(Project $project)
+    protected function getStoreDir(Project $project): string
     {
         $dir = $project->getCacheDir().'/store';
 

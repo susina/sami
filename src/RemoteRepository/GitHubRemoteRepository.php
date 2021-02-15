@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -13,7 +13,7 @@ namespace Sami\RemoteRepository;
 
 class GitHubRemoteRepository extends AbstractRemoteRepository
 {
-    public function getFileUrl($projectVersion, $relativePath, $line)
+    public function getFileUrl(string $projectVersion, string $relativePath, int $line): string
     {
         $url = 'https://github.com/'.$this->name.'/blob/'.str_replace('\\', '/', $projectVersion.$relativePath);
 

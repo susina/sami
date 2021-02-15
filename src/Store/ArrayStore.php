@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -21,16 +21,16 @@ use Sami\Reflection\ClassReflection;
  */
 class ArrayStore implements StoreInterface
 {
-    private $classes = [];
+    private array $classes = [];
 
-    public function setClasses($classes)
+    public function setClasses(array $classes): void
     {
         foreach ($classes as $class) {
             $this->classes[$class->getName()] = $class;
         }
     }
 
-    public function readClass(Project $project, $name)
+    public function readClass(Project $project, string $name)
     {
         if (!isset($this->classes[$name])) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $name));
@@ -39,7 +39,7 @@ class ArrayStore implements StoreInterface
         return $this->classes[$name];
     }
 
-    public function removeClass(Project $project, $name)
+    public function removeClass(Project $project, string $name): void
     {
         if (!isset($this->classes[$name])) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $name));
@@ -48,17 +48,17 @@ class ArrayStore implements StoreInterface
         unset($this->classes[$name]);
     }
 
-    public function writeClass(Project $project, ClassReflection $class)
+    public function writeClass(Project $project, ClassReflection $class): void
     {
         $this->classes[$class->getName()] = $class;
     }
 
-    public function readProject(Project $project)
+    public function readProject(Project $project): array
     {
         return $this->classes;
     }
 
-    public function flushProject(Project $project)
+    public function flushProject(Project $project): void
     {
         $this->classes = [];
     }

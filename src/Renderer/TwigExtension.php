@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -15,10 +15,13 @@ use Michelf\MarkdownExtra;
 use Sami\Reflection\ClassReflection;
 use Sami\Reflection\MethodReflection;
 use Sami\Reflection\PropertyReflection;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
-class TwigExtension extends \Twig_Extension
+class TwigExtension extends AbstractExtension
 {
-    protected $markdown;
+    protected MarkdownExtra $markdown;
     protected $project;
     protected $currentDepth;
 
@@ -27,11 +30,11 @@ class TwigExtension extends \Twig_Extension
      *
      * @return array An array of filters
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
-            new \Twig_SimpleFilter('desc', [$this, 'parseDesc'], ['needs_context' => true, 'is_safe' => ['html']]),
-            new \Twig_SimpleFilter('snippet', [$this, 'getSnippet']),
+            new TwigFilter('desc', [$this, 'parseDesc'], ['needs_context' => true, 'is_safe' => ['html']]),
+            new TwigFilter('snippet', [$this, 'getSnippet']),
         ];
     }
 
@@ -40,15 +43,15 @@ class TwigExtension extends \Twig_Extension
      *
      * @return array An array of functions
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
-            new \Twig_SimpleFunction('namespace_path', [$this, 'pathForNamespace'], ['needs_context' => true, 'is_safe' => ['all']]),
-            new \Twig_SimpleFunction('class_path', [$this, 'pathForClass'], ['needs_context' => true, 'is_safe' => ['all']]),
-            new \Twig_SimpleFunction('method_path', [$this, 'pathForMethod'], ['needs_context' => true, 'is_safe' => ['all']]),
-            new \Twig_SimpleFunction('property_path', [$this, 'pathForProperty'], ['needs_context' => true, 'is_safe' => ['all']]),
-            new \Twig_SimpleFunction('path', [$this, 'pathForStaticFile'], ['needs_context' => true]),
-            new \Twig_SimpleFunction('abbr_class', [$this, 'abbrClass'], ['is_safe' => ['all']]),
+            new TwigFunction('namespace_path', [$this, 'pathForNamespace'], ['needs_context' => true, 'is_safe' => ['all']]),
+            new TwigFunction('class_path', [$this, 'pathForClass'], ['needs_context' => true, 'is_safe' => ['all']]),
+            new TwigFunction('method_path', [$this, 'pathForMethod'], ['needs_context' => true, 'is_safe' => ['all']]),
+            new TwigFunction('property_path', [$this, 'pathForProperty'], ['needs_context' => true, 'is_safe' => ['all']]),
+            new TwigFunction('path', [$this, 'pathForStaticFile'], ['needs_context' => true]),
+            new TwigFunction('abbr_class', [$this, 'abbrClass'], ['is_safe' => ['all']]),
         ];
     }
 
@@ -57,32 +60,32 @@ class TwigExtension extends \Twig_Extension
         $this->currentDepth = $depth;
     }
 
-    public function pathForClass(array $context, ClassReflection $class)
+    public function pathForClass(array $context, ClassReflection $class): string
     {
         return $this->relativeUri($this->currentDepth).str_replace('\\', '/', $class).'.html';
     }
 
-    public function pathForNamespace(array $context, $namespace)
+    public function pathForNamespace(array $context, string $namespace): string
     {
         return $this->relativeUri($this->currentDepth).str_replace('\\', '/', $namespace).'.html';
     }
 
-    public function pathForMethod(array $context, MethodReflection $method)
+    public function pathForMethod(array $context, MethodReflection $method): string
     {
         return $this->relativeUri($this->currentDepth).str_replace('\\', '/', $method->getClass()->getName()).'.html#method_'.$method->getName();
     }
 
-    public function pathForProperty(array $context, PropertyReflection $property)
+    public function pathForProperty(array $context, PropertyReflection $property): string
     {
         return $this->relativeUri($this->currentDepth).str_replace('\\', '/', $property->getClass()->getName()).'.html#property_'.$property->getName();
     }
 
-    public function pathForStaticFile(array $context, $file)
+    public function pathForStaticFile(array $context, string $file): string
     {
         return $this->relativeUri($this->currentDepth).$file;
     }
 
-    public function abbrClass($class, $absolute = false)
+    public function abbrClass(string|ClassReflection $class, bool $absolute = false): string
     {
         if ($class instanceof ClassReflection) {
             $short = $class->getShortName();
@@ -104,7 +107,7 @@ class TwigExtension extends \Twig_Extension
         return sprintf('<abbr title="%s">%s</abbr>', $class, $short);
     }
 
-    public function parseDesc(array $context, $desc, ClassReflection $class)
+    public function parseDesc(array $context, $desc, ClassReflection $class): array|string|null
     {
         if (!$desc) {
             return $desc;
@@ -123,7 +126,7 @@ class TwigExtension extends \Twig_Extension
         return preg_replace(['#^<p>\s*#s', '#\s*</p>\s*$#s'], '', $this->markdown->transform($desc));
     }
 
-    public function getSnippet($string)
+    public function getSnippet(string $string): array|string
     {
         if (preg_match('/^(.{50,}?)\s.*/m', $string, $matches)) {
             $string = $matches[1];
@@ -132,7 +135,7 @@ class TwigExtension extends \Twig_Extension
         return str_replace(["\n", "\r"], '', strip_tags($string));
     }
 
-    protected function relativeUri($value)
+    protected function relativeUri(string $value): string
     {
         if (!$value) {
             return '';

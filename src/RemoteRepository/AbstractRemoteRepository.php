@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -13,18 +13,18 @@ namespace Sami\RemoteRepository;
 
 abstract class AbstractRemoteRepository
 {
-    protected $name;
-    protected $localPath;
+    protected string $name;
+    protected string $localPath;
 
-    public function __construct($name, $localPath)
+    public function __construct(string $name, string $localPath)
     {
         $this->name = $name;
         $this->localPath = $localPath;
     }
 
-    abstract public function getFileUrl($projectVersion, $relativePath, $line);
+    abstract public function getFileUrl(string $projectVersion, string $relativePath, int $line): string;
 
-    public function getRelativePath($file)
+    public function getRelativePath(string $file): string
     {
         $replacementCount = 0;
         $filePath = str_replace($this->localPath, '', $file, $replacementCount);

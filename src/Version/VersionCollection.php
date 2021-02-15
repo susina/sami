@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -15,7 +15,7 @@ use Sami\Project;
 
 abstract class VersionCollection implements \Iterator, \Countable
 {
-    protected $versions = [];
+    protected array $versions = [];
     protected $indice;
     protected $project;
 

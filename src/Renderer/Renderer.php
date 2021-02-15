@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -16,21 +16,22 @@ use Sami\Message;
 use Sami\Project;
 use Sami\Tree;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
 
 class Renderer
 {
-    protected $twig;
-    protected $templates;
-    protected $filesystem;
-    protected $themes;
-    protected $theme;
-    protected $steps;
-    protected $step;
-    protected $tree;
-    protected $indexer;
-    protected $cachedTree;
+    protected Environment $twig;
+    protected array $templates;
+    protected Filesystem $filesystem;
+    protected ThemeSet $themes;
+    protected Theme $theme;
+    protected int $steps;
+    protected int $step;
+    protected Tree $tree;
+    protected Indexer $indexer;
+    protected array $cachedTree;
 
-    public function __construct(\Twig_Environment $twig, ThemeSet $themes, Tree $tree, Indexer $indexer)
+    public function __construct(Environment $twig, ThemeSet $themes, Tree $tree, Indexer $indexer)
     {
         $this->twig = $twig;
         $this->themes = $themes;
@@ -40,12 +41,12 @@ class Renderer
         $this->filesystem = new Filesystem();
     }
 
-    public function isRendered(Project $project)
+    public function isRendered(Project $project): bool
     {
         return $this->getDiff($project)->isAlreadyRendered();
     }
 
-    public function render(Project $project, $callback = null, $force = false)
+    public function render(Project $project, callable $callback = null, bool $force = false): Diff
     {
         $this->twig->setCache($cacheDir = $project->getCacheDir().'/twig');
 
@@ -93,7 +94,7 @@ class Renderer
         return $diff;
     }
 
-    protected function renderStaticTemplates(Project $project, $callback = null)
+    protected function renderStaticTemplates(Project $project, callable $callback = null): void
     {
         if (null !== $callback) {
             call_user_func($callback, Message::RENDER_PROGRESS, ['Static', 'Rendering files', $this->getProgression()]);
@@ -111,7 +112,7 @@ class Renderer
         }
     }
 
-    protected function renderGlobalTemplates(Project $project, $callback = null)
+    protected function renderGlobalTemplates(Project $project, callable $callback = null): void
     {
         $variables = [
             'namespaces' => $project->getNamespaces(),
@@ -131,7 +132,7 @@ class Renderer
         }
     }
 
-    protected function renderNamespaceTemplates(array $namespaces, Project $project, $callback = null)
+    protected function renderNamespaceTemplates(array $namespaces, Project $project, callable $callback = null): void
     {
         foreach ($namespaces as $namespace) {
             if (null !== $callback) {
@@ -153,7 +154,7 @@ class Renderer
         }
     }
 
-    protected function renderClassTemplates(array $classes, Project $project, $callback = null)
+    protected function renderClassTemplates(array $classes, Project $project, callable $callback = null)
     {
         foreach ($classes as $class) {
             if (null !== $callback) {
@@ -224,7 +225,7 @@ class Renderer
         }
     }
 
-    protected function save(Project $project, $uri, $template, $variables)
+    protected function save(Project $project, string $uri, $template, $variables): void
     {
         $depth = substr_count($uri, '/');
         $this->twig->getExtension('Sami\Renderer\TwigExtension')->setCurrentDepth($depth);
@@ -239,7 +240,7 @@ class Renderer
         file_put_contents($file, $this->twig->render($template, $variables));
     }
 
-    protected function getIndex(Project $project)
+    protected function getIndex(Project $project): array
     {
         $items = [];
         foreach ($project->getProjectClasses() as $class) {
@@ -261,7 +262,7 @@ class Renderer
         return $items;
     }
 
-    protected function getDiff(Project $project)
+    protected function getDiff(Project $project): Diff
     {
         return new Diff($project, $project->getBuildDir().'/renderer.index');
     }
@@ -271,7 +272,7 @@ class Renderer
         return $this->themes->getTheme($project->getConfig('theme'));
     }
 
-    protected function getProgression()
+    protected function getProgression(): float|bool
     {
         return floor((++$this->step / $this->steps) * 100);
     }
@@ -283,7 +284,7 @@ class Renderer
      *
      * @return array
      */
-    private function getTree(Project $project)
+    private function getTree(Project $project): array
     {
         $key = $project->getBuildDir();
         if (!isset($this->cachedTree[$key])) {

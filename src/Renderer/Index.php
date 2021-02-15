@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -15,53 +15,48 @@ use Sami\Project;
 
 class Index implements \Serializable
 {
-    protected $classes;
-    protected $versions;
-    protected $namespaces;
+    protected array $classes = [];
+    protected array $versions = [];
+    protected array $namespaces = [];
 
     public function __construct(Project $project = null)
     {
-        $this->classes = [];
-        if (null !== $project) {
-            foreach ($project->getProjectClasses() as $class) {
-                $this->classes[$class->getName()] = $class->getHash();
-            }
+        if ($project === null) {
+            return;
         }
 
-        $this->versions = [];
-        if (null !== $project) {
-            foreach ($project->getVersions() as $version) {
-                $this->versions[] = (string) $version;
-            }
+        foreach ($project->getProjectClasses() as $class) {
+            $this->classes[$class->getName()] = $class->getHash();
         }
 
-        $this->namespaces = [];
-        if (null !== $project) {
-            $this->namespaces = $project->getConfig('simulate_namespaces') ? $project->getSimulatedNamespaces() : $project->getNamespaces();
+        foreach ($project->getVersions() as $version) {
+            $this->versions[] = (string) $version;
         }
+
+        $this->namespaces = $project->getConfig('simulate_namespaces') ? $project->getSimulatedNamespaces() : $project->getNamespaces();
     }
 
-    public function getVersions()
+    public function getVersions(): array
     {
         return $this->versions;
     }
 
-    public function getClasses()
+    public function getClasses(): array
     {
         return $this->classes;
     }
 
-    public function getNamespaces()
+    public function getNamespaces(): array
     {
         return $this->namespaces;
     }
 
-    public function getHash($class)
+    public function getHash(string $class): string|false
     {
         return $this->classes[$class] ?? false;
     }
 
-    public function serialize()
+    public function serialize(): ?string
     {
         return serialize([$this->classes, $this->versions, $this->namespaces]);
     }

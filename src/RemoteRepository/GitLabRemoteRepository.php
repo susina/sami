@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -15,16 +15,16 @@ class GitLabRemoteRepository extends AbstractRemoteRepository
 {
     protected $url = 'https://gitlab.com/';
 
-    public function __construct($name, $localPath, $url = '')
+    public function __construct(string $name, string $localPath, string $url = '')
     {
-        if (!empty($url)) {
+        if ($url !== '') {
             $this->url = $url;
         }
 
         parent::__construct($name, $localPath);
     }
 
-    public function getFileUrl($projectVersion, $relativePath, $line)
+    public function getFileUrl(string $projectVersion, string $relativePath, int $line): string
     {
         $url = $this->url.$this->name.'/blob/'.str_replace('\\', '/', $projectVersion.$relativePath);
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -16,11 +16,11 @@ use Sami\Reflection\ClassReflection;
 
 interface StoreInterface
 {
-    public function readClass(Project $project, $name);
+    public function readClass(Project $project, string $name);
 
     public function writeClass(Project $project, ClassReflection $class);
 
-    public function removeClass(Project $project, $name);
+    public function removeClass(Project $project, string $name);
 
     public function readProject(Project $project);
 

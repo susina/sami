@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -15,17 +15,17 @@ use Sami\Project;
 
 class Diff
 {
-    protected $project;
-    protected $current;
+    protected Project $project;
+    protected Index $current;
     protected $versions;
-    protected $filename;
-    protected $alreadyRendered;
-    protected $previousNamespaces;
-    protected $currentNamespaces;
+    protected string $filename;
+    protected bool $alreadyRendered;
+    protected array $previousNamespaces;
+    protected array $currentNamespaces;
 
-    private $previous;
+    private Index $previous;
 
-    public function __construct(Project $project, $filename)
+    public function __construct(Project $project, string $filename)
     {
         $this->project = $project;
         $this->current = new Index($project);
@@ -46,22 +46,22 @@ class Diff
         $this->currentNamespaces = $this->current->getNamespaces();
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return !$this->areVersionsModified() && (0 == count($this->getModifiedClasses()) + count($this->getRemovedClasses()));
     }
 
-    public function save()
+    public function save(): void
     {
         file_put_contents($this->filename, serialize($this->current));
     }
 
-    public function isAlreadyRendered()
+    public function isAlreadyRendered(): bool
     {
         return $this->alreadyRendered;
     }
 
-    public function areVersionsModified()
+    public function areVersionsModified(): bool
     {
         $versions = [];
         foreach ($this->project->getVersions() as $version) {
@@ -71,17 +71,17 @@ class Diff
         return $versions != $this->previous->getVersions();
     }
 
-    public function getModifiedNamespaces()
+    public function getModifiedNamespaces(): array
     {
         return array_diff($this->currentNamespaces, $this->previousNamespaces);
     }
 
-    public function getRemovedNamespaces()
+    public function getRemovedNamespaces(): array
     {
         return array_diff($this->previousNamespaces, $this->currentNamespaces);
     }
 
-    public function getModifiedClasses()
+    public function getModifiedClasses(): array
     {
         $classes = [];
         foreach ($this->current->getClasses() as $class => $hash) {
@@ -93,7 +93,7 @@ class Diff
         return $classes;
     }
 
-    public function getRemovedClasses()
+    public function getRemovedClasses(): array
     {
         return array_diff(array_keys($this->previous->getClasses()), array_keys($this->current->getClasses()));
     }

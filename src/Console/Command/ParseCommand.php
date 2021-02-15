@@ -20,7 +20,7 @@ class ParseCommand extends Command
     /**
      * @see Command
      */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -54,7 +54,7 @@ EOF
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<bg=cyan;fg=white> Parsing project </>');
 

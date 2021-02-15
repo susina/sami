@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -13,43 +13,43 @@ namespace Sami\Version;
 
 class Version
 {
-    protected $isFrozen;
-    protected $name;
-    protected $longname;
+    protected bool $isFrozen;
+    protected string $name;
+    protected string $longname;
 
-    public function __construct($name, $longname = null)
+    public function __construct(string $name, string $longname = '')
     {
         $this->name = $name;
-        $this->longname = null === $longname ? $name : $longname;
+        $this->longname = '' === $longname ? $name : $longname;
         $this->isFrozen = false;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getLongName()
+    public function getLongName(): string
     {
         return $this->longname;
     }
 
-    public function setFrozen($isFrozen)
+    public function setFrozen(bool $isFrozen): void
     {
         $this->isFrozen = (bool) $isFrozen;
     }
 
-    public function isFrozen()
+    public function isFrozen(): bool
     {
         return $this->isFrozen;
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the Sami utility.
@@ -16,14 +16,15 @@ use Symfony\Component\Yaml\Yaml;
 
 class ThemeSet
 {
-    protected $themes;
+    /** @var Theme[] */
+    protected array $themes;
 
     public function __construct(array $dirs)
     {
         $this->discover($dirs);
     }
 
-    public function getTheme($name)
+    public function getTheme(string $name): Theme
     {
         if (!isset($this->themes[$name])) {
             throw new \InvalidArgumentException(sprintf('Theme "%s" does not exist.', $name));
@@ -32,7 +33,7 @@ class ThemeSet
         return $this->themes[$name];
     }
 
-    protected function discover(array $dirs)
+    protected function discover(array $dirs): void
     {
         $this->themes = [];
         $parents = [];
