@@ -1,196 +1,189 @@
-Sami: an API documentation generator
-====================================
+# Sami: an API documentation generator
 
-**WARNING**: Sami is not supported nor maintained anymore. Feel free to fork.
 
-Curious about what Sami generates? Have a look at the `Symfony API`_.
+This library is a fork of [FriendsOfPHP/Sami](https://github.com/FriendsOfPHP/Sami) moved on to work with PHP >= 8.0
 
-Installation
-------------
+For PHP 7.x please use the original library.
 
-.. caution::
+> Since the [original link](http://get.sensiolabs.org/sami.phar) to download the `sami.phar` seems to be
+> not available anymore, you can use the following: https://github.com/cristianoc72/Sami/releases/download/v4.1.3/sami.phar 
 
-    Sami requires **PHP 7**.
+## Installation
 
-Get Sami as a `phar file`_:
+Get Sami as a __phar file__:
 
-.. code-block:: bash
+```bash
+    $ curl -O https://github.com/susina/sami/releases/download/v5.0.0/sami.phar
+```
 
-    $ curl -O http://get.sensiolabs.org/sami.phar
-
-Check that everything worked as expected by executing the ``sami.phar`` file
+Check that everything worked as expected by executing the `sami.phar` file
 without any arguments:
 
-.. code-block:: bash
-
+```bash
     $ php sami.phar
+```
 
-.. note::
+> Installing Sami as a regular Composer dependency is NOT supported. Sami is a tool, not a library.
+  As such, it should be installed as a standalone package, so that Sami's dependencies do not interfere
+  with your project's dependencies.
 
-    Installing Sami as a regular Composer dependency is NOT supported. Sami is
-    a tool, not a library. As such, it should be installed as a standalone
-    package, so that Sami's dependencies do not interfere with your project's
-    dependencies.
-
-Configuration
--------------
+## Configuration
 
 Before generating documentation, you must create a configuration file. Here is
 the simplest possible one:
 
-.. code-block:: php
+```php
+<?php declare(strict_types=1);
 
-    <?php
+return new Susina\Sami\Sami('/path/to/symfony/src');
+```
 
-    return new Sami\Sami('/path/to/symfony/src');
-
-The configuration file must return an instance of ``Sami\Sami`` and the first
+The configuration file must return an instance of `Susina\Sami\Sami` and the first
 argument of the constructor is the path to the code you want to generate
 documentation for.
 
 Actually, instead of a directory, you can use any valid PHP iterator (and for
-that matter any instance of the Symfony `Finder`_ class):
+that matter any instance of the Symfony `Finder` class):
 
-.. code-block:: php
+```php
+<?php declare(strict_types=1);
 
-    <?php
+use Susina\Sami\Sami;
+use Symfony\Component\Finder\Finder;
 
-    use Sami\Sami;
-    use Symfony\Component\Finder\Finder;
+$iterator = Finder::create()
+    ->files()
+    ->name('*.php')
+    ->exclude('Resources')
+    ->exclude('Tests')
+    ->in('/path/to/symfony/src')
+;
 
-    $iterator = Finder::create()
-        ->files()
-        ->name('*.php')
-        ->exclude('Resources')
-        ->exclude('Tests')
-        ->in('/path/to/symfony/src')
-    ;
+return new Sami($iterator);
+```
 
-    return new Sami($iterator);
-
-The ``Sami`` constructor optionally takes an array of options as a second
+The `Sami` constructor optionally takes an array of options as a second
 argument:
 
-.. code-block:: php
-
-    return new Sami($iterator, array(
-        'theme'                => 'symfony',
-        'title'                => 'Symfony2 API',
-        'build_dir'            => __DIR__.'/build',
-        'cache_dir'            => __DIR__.'/cache',
-        'remote_repository'    => new GitHubRemoteRepository('username/repository', '/path/to/repository'),
-        'default_opened_level' => 2,
-    ));
+```php
+return new Sami($iterator, array(
+    'theme'                => 'symfony',
+    'title'                => 'Symfony2 API',
+    'build_dir'            => __DIR__.'/build',
+    'cache_dir'            => __DIR__.'/cache',
+    'remote_repository'    => new GitHubRemoteRepository('username/repository', '/path/to/repository'),
+    'default_opened_level' => 2,
+));
+```
 
 And here is how you can configure different versions:
 
-.. code-block:: php
+```php
+<?php declare(strict_types=1);
 
-    <?php
+use Susina\Sami\Sami;
+use Susina\Sami\RemoteRepository\GitHubRemoteRepository;
+use Susina\Sami\Version\GitVersionCollection;
+use Symfony\Component\Finder\Finder;
 
-    use Sami\Sami;
-    use Sami\RemoteRepository\GitHubRemoteRepository;
-    use Sami\Version\GitVersionCollection;
-    use Symfony\Component\Finder\Finder;
+$iterator = Finder::create()
+    ->files()
+    ->name('*.php')
+    ->exclude('Resources')
+    ->exclude('Tests')
+    ->in($dir = '/path/to/symfony/src')
+;
 
-    $iterator = Finder::create()
-        ->files()
-        ->name('*.php')
-        ->exclude('Resources')
-        ->exclude('Tests')
-        ->in($dir = '/path/to/symfony/src')
-    ;
+// generate documentation for all v2.0.* tags, the 2.0 branch, and the master one
+$versions = GitVersionCollection::create($dir)
+    ->addFromTags('v2.0.*')
+    ->add('2.0', '2.0 branch')
+    ->add('master', 'master branch')
+;
 
-    // generate documentation for all v2.0.* tags, the 2.0 branch, and the master one
-    $versions = GitVersionCollection::create($dir)
-        ->addFromTags('v2.0.*')
-        ->add('2.0', '2.0 branch')
-        ->add('master', 'master branch')
-    ;
-
-    return new Sami($iterator, array(
-        'theme'                => 'symfony',
-        'versions'             => $versions,
-        'title'                => 'Symfony2 API',
-        'build_dir'            => __DIR__.'/../build/sf2/%version%',
-        'cache_dir'            => __DIR__.'/../cache/sf2/%version%',
-        'remote_repository'    => new GitHubRemoteRepository('symfony/symfony', dirname($dir)),
-        'default_opened_level' => 2,
-    ));
+return new Sami($iterator, array(
+    'theme'                => 'symfony',
+    'versions'             => $versions,
+    'title'                => 'Symfony2 API',
+    'build_dir'            => __DIR__.'/../build/sf2/%version%',
+    'cache_dir'            => __DIR__.'/../cache/sf2/%version%',
+    'remote_repository'    => new GitHubRemoteRepository('symfony/symfony', dirname($dir)),
+    'default_opened_level' => 2,
+));
+```
 
 To generate documentation for a PHP 5.2 project, simply set the
-``simulate_namespaces`` option to ``true``.
+`simulate_namespaces` option to `true`.
 
-You can find more configuration examples under the ``examples/`` directory of
+You can find more configuration examples under the `examples/` directory of
 the source code.
 
 Sami only documents the public API (public properties and methods); override
-the default configured ``filter`` to change this behavior:
+the default configured `filter` to change this behavior:
 
-.. code-block:: php
+```php
+<?php declare(strict_types=1);
 
-    <?php
+use Susina\Sami\Parser\Filter\TrueFilter;
 
-    use Sami\Parser\Filter\TrueFilter;
+$sami = new Sami(...);
+// document all methods and properties
+$sami['filter'] = function () {
+    return new TrueFilter();
+};
+```
 
-    $sami = new Sami(...);
-    // document all methods and properties
-    $sami['filter'] = function () {
-        return new TrueFilter();
-    };
-
-Rendering
----------
+## Rendering
 
 Now that we have a configuration file, let's generate the API documentation:
 
-.. code-block:: bash
+```bash
+$ php sami.phar update /path/to/config.php
+```
 
-    $ php sami.phar update /path/to/config.php
-
-The generated documentation can be found under the configured ``build/``
+The generated documentation can be found under the configured `build/`
 directory (note that the client side search engine does not work on Chrome due
 to JavaScript execution restriction, unless Chrome is started with the
 "--allow-file-access-from-files" option -- it works fine in Firefox).
 
 By default, Sami is configured to run in "incremental" mode. It means that when
-running the ``update`` command, Sami only re-generates the files that needs to
+running the `update` command, Sami only re-generates the files that needs to
 be updated based on what has changed in your code since the last execution.
 
 Sami also detects problems in your phpdoc and can tell you what you need to fix
-if you add the ``-v`` option:
+if you add the `-v` option:
 
-.. code-block:: bash
+```bash
+$ php sami.phar update /path/to/config.php -v
+```
 
-    $ php sami.phar update /path/to/config.php -v
-
-Creating a Theme
-----------------
+## Creating a Theme
 
 If the default themes do not suit your needs, you can very easily create a new
 one, or just override an existing one.
 
-A theme is just a directory with a ``manifest.yml`` file that describes the
+A theme is just a directory with a `manifest.yml` file that describes the
 theme (this is a YAML file):
 
-.. code-block:: yaml
-
+```yaml
     name:   symfony
     parent: default
+```
 
-The above configuration creates a new ``symfony`` theme based on the
-``default`` built-in theme. To override a template, just create a file with
+The above configuration creates a new `symfony` theme based on the
+`default` built-in theme. To override a template, just create a file with
 the same name as the original one. For instance, here is how you can extend the
 default class template to prefix the class name with "Class " in the class page
 title:
 
-.. code-block:: jinja
+```Twig
 
-    {# pages/class.twig #}
+{# pages/class.twig #}
 
-    {% extends 'default/pages/class.twig' %}
+{% extends 'default/pages/class.twig' %}
 
-    {% block title %}Class {{ parent() }}{% endblock %}
+{% block title %}Class {{ parent() }}{% endblock %}
+```
 
 If you are familiar with Twig, you will be able to very easily tweak every
 aspect of the templates as everything has been well isolated in named Twig
@@ -199,8 +192,7 @@ blocks.
 A theme can also add more templates and static files. Here is the manifest for
 the default theme:
 
-.. code-block:: yaml
-
+```YAML
     name: default
 
     static:
@@ -232,32 +224,28 @@ the default theme:
 
     class:
         'class.twig': '%s.html'
-
+```
 
 Files are contained into sections, depending on how Sami needs to treat them:
 
-* ``static``: Files are copied as is (for assets like images, stylesheets, or
+- __static__: Files are copied as is (for assets like images, stylesheets, or
   JavaScript files);
 
-* ``global``: Templates that do not depend on the current class context;
+- __global__: Templates that do not depend on the current class context;
 
-* ``namespace``: Templates that should be generated for every namespace;
+- __namespace__: Templates that should be generated for every namespace;
 
-* ``class``: Templates that should be generated for every class.
+- __class__: Templates that should be generated for every class.
 
-.. _Symfony API: http://api.symfony.com/
-.. _phar file:   http://get.sensiolabs.org/sami.phar
-.. _Finder:      http://symfony.com/doc/current/components/finder.html
 
-Search Index
-~~~~~~~~~~~~
+## Search Index
 
 The autocomplete and search functionality of Sami is provided through a
 search index that is generated based on the classes, namespaces, interfaces,
 and traits of a project. You can customize the search index by overriding the
-``search_index_extra`` block of ``sami.js.twig``.
+`search_index_extra` block of `sami.js.twig`.
 
-The ``search_index_extra`` allows you to extend the default theme and add more
+The `search_index_extra` allows you to extend the default theme and add more
 entries to the index. For example, some projects implement magic methods that
 are dynamically generated at runtime. You might wish to document these methods
 while generating API documentation and add them to the search index.
@@ -293,8 +281,7 @@ dynamically generated API operations of a web service client. Here's a simple
 example that adds dynamically generated API operations for a web service client
 to the search index:
 
-.. code-block:: jinja
-
+```Twig
     {% extends "default/sami.js.twig" %}
 
     {% block search_index_extra %}
@@ -302,11 +289,10 @@ to the search index:
             {"type": "Operation", "link": "{{ operation.path }}", "name": "{{ operation.name }}", "doc": "{{ operation.doc }}"},
         {%- endfor %}
     {% endblock %}
+```
 
-This example assumes that the template has a variable ``operations`` available
+This example assumes that the template has a variable `operations` available
 which contains an array of operations.
 
-.. note::
-
-    Always include a trailing comma for each entry you add to the index. Sami
-    will take care of ensuring that trailing commas are handled properly.
+>    Always include a trailing comma for each entry you add to the index. Sami
+     will take care of ensuring that trailing commas are handled properly.

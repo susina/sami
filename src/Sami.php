@@ -11,6 +11,7 @@
 
 namespace Sami;
 
+use IteratorAggregate;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
@@ -31,13 +32,14 @@ use Sami\Renderer\TwigExtension;
 use Sami\Store\JsonStore;
 use Sami\Version\SingleVersionCollection;
 use Sami\Version\Version;
-use Symfony\Component\Finder\Iterator\FilterIterator;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class Sami extends Container
 {
     const VERSION = '5.0-DEV';
 
-    public function __construct(?FilterIterator $iterator = null, array $config = [])
+    public function __construct(?IteratorAggregate $iterator = null, array $config = [])
     {
         parent::__construct();
 
@@ -160,7 +162,7 @@ class Sami extends Container
         };
 
         $this['twig'] = function () {
-            $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(['/']), [
+            $twig = new Environment(new FilesystemLoader(['/']), [
                 'strict_variables' => true,
                 'debug' => true,
                 'auto_reload' => true,

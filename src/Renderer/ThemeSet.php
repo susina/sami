@@ -38,7 +38,7 @@ class ThemeSet
         $this->themes = [];
         $parents = [];
         foreach (Finder::create()->name('manifest.yml')->in($dirs) as $manifest) {
-            $text = file_get_contents($manifest);
+            $text = file_get_contents($manifest->getPathname());
             $config = Yaml::parse($text);
             if (!isset($config['name'])) {
                 throw new \InvalidArgumentException(sprintf('Theme manifest in "%s" must have a "name" entry.', $manifest));

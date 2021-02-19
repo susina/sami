@@ -3,7 +3,6 @@
     "type": "application",
     "description": "Sami, an API documentation generator",
     "keywords": ["phpdoc"],
-    "homepage": "http://sami.sensiolabs.org",
     "license": "MIT",
     "authors": [
         {
@@ -22,7 +21,6 @@
         "symfony/filesystem": "^5.0",
         "symfony/yaml": "^5.0",
         "symfony/process": "^5.0",
-        "blackfire/php-sdk": "^1.5.18",
         "gossi/docblock": "^2.0"
     },
     "require-dev": {

@@ -1,11 +1,8 @@
 {
-    "output": "sami.phar",
-    "chmod": "0755",
-    "compactors": [
-        "Herrera\\Box\\Compactor\\Php"
+     "compactors": [
+        "KeviGH\\Box\\Compactor\\Php"
     ],
     "extract": false,
-    "main": "sami.php",
     "files": [
         "LICENSE"
     ],
@@ -19,7 +16,5 @@
             "exclude": ["Tests"],
             "in": "Sami"
         }
-    ],
-    "stub": true,
-    "web": false
+    ]
 }

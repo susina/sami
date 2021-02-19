@@ -1,0 +1,59 @@
+name: Publish Phar Archive
+on:
+  release:
+    types: [ published ]
+jobs:
+  build-phar:
+    runs-on: ubuntu-latest
+    name: Build sami.phar
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          coverage: none
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+      - name: Download box.phar
+        run: wget https://github.com/box-project/box/releases/download/3.11.1/box.phar
+      - name: Build PHAR
+        run: php box.phar compile
+      - name: Upload the sami.phar artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: sami.phar
+          path: bin/sami.phar
+
+  publish-phar:
+    runs-on: ubuntu-latest
+    name: Publish sami.phar
+    needs: build-phar
+    steps:
+      - uses: actions/download-artifact@v1
+        with:
+          name: sami.phar
+          path: .
+      - name: Upload sami.phar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: sami.phar
+          asset_name: sami.phar
+          asset_content_type: application/zip
