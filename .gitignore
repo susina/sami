@@ -2,4 +2,5 @@ composer.phar
 cache
 build
 vendor
-/.phpunit
+coverage
+*.cache

@@ -12,8 +12,8 @@
             "in": "vendor"
         },
         {
-            "exclude": ["Tests"],
-            "in": "Sami"
+            "exclude": ["tests", "example"],
+            "in": "."
         }
     ]
 }

@@ -1,41 +1,59 @@
 {
-    "name": "sami/sami",
+    "name": "susina/sami",
     "type": "application",
     "description": "Sami, an API documentation generator",
     "keywords": ["phpdoc"],
-    "homepage": "http://sami.sensiolabs.org",
     "license": "MIT",
     "authors": [
         {
             "name": "Fabien Potencier",
             "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Cristiano Cinotti",
+            "email": "cristianocinotti@gmail.com"
         }
     ],
     "require": {
-        "php": "^7.1.3",
-        "pimple/pimple": "~3.0",
-        "twig/twig": "~2.0",
-        "nikic/php-parser": "~3.0",
-        "michelf/php-markdown": "~1.3",
-        "symfony/console": "~3.0|~4.0",
-        "symfony/finder": "~3.0|~4.0",
-        "symfony/filesystem": "~3.0|~4.0",
-        "symfony/yaml": "~3.0|~4.0",
-        "symfony/process": "~3.0|~4.0",
-        "phpdocumentor/reflection-docblock": "~2.0",
-        "blackfire/php-sdk": "^1.5.18"
+        "php": "^8.0",
+        "pimple/pimple": "^3.0",
+        "twig/twig": "^3.0",
+        "nikic/php-parser": "^4.0",
+        "michelf/php-markdown": "^1.3",
+        "symfony/console": "^5.0",
+        "symfony/finder": "^5.0",
+        "symfony/filesystem": "^5.0",
+        "symfony/yaml": "^5.0",
+        "symfony/process": "^5.0",
+        "gossi/docblock": "^2.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~4.0"
+        "phpunit/phpunit": "^9.5",
+        "psalm/phar": "^4.5"
     },
     "autoload": {
-        "psr-4": { "Sami\\": "Sami/" }
+        "psr-4": { "Susina\\Sami\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Susina\\Sami\\Tests\\": "tests/" }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.1-dev"
+            "dev-master": "5.0-dev"
         }
     },
     "prefer-stable": true,
-    "bin": ["sami.php"]
+    "bin": ["sami.php"],
+    "scripts": {
+        "analytics": "vendor/bin/psalm.phar",
+        "coverage:html": "@test --coverage-html coverage/",
+        "coverage:clover": "@test --coverage-clover clover.xml",
+        "test": "phpunit --colors=always"
+    },
+    "scripts-descriptions": {
+        "analytics": "Run static analysis tool",
+        "coverage:html": "Create a code coverage report in html format, into the `coverage/` directory",
+        "coverage:clover": "Create a code coverage report in xml format, into `clover.xml` file",
+        "test": "Run all tests"
+    }
 }

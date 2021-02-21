@@ -1,6 +1,6 @@
 <?php
 
-use Sami\Version\GitVersionCollection;
+use Susina\Sami\Version\GitVersionCollection;
 
 $dir = '/Users/fabien/Code/github/twigphp/Twig/lib';
 
@@ -9,7 +9,7 @@ $versions = GitVersionCollection::create($dir)
     ->add('master', 'master branch')
 ;
 
-return new Sami\Sami($dir, array(
+return new Sami\Sami($dir, [
     'theme'                => 'default',
     'title'                => 'Twig 1.6 API',
     'build_dir'            => __DIR__.'/../build/twig/%version%',
@@ -17,4 +17,4 @@ return new Sami\Sami($dir, array(
     'simulate_namespaces'  => true,
     'default_opened_level' => 1,
     'versions' => $versions,
-));
+]);
