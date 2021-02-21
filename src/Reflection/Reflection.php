@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Reflection;
+namespace Susina\Sami\Reflection;
 
 use PhpParser\Node\Identifier;
-use Sami\Project;
+use Susina\Sami\Project;
 
 abstract class Reflection
 {

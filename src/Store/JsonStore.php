@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Store;
+namespace Susina\Sami\Store;
 
-use Sami\Project;
-use Sami\Reflection\ClassReflection;
+use Susina\Sami\Project;
+use Susina\Sami\Reflection\ClassReflection;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -52,7 +52,7 @@ class JsonStore implements StoreInterface
     {
         $classes = [];
         foreach (Finder::create()->name('c_*.json')->in($this->getStoreDir($project)) as $file) {
-            $classes[] = ClassReflection::fromArray($project, json_decode(file_get_contents($file), true));
+            $classes[] = ClassReflection::fromArray($project, json_decode(file_get_contents($file->getPathname()), true));
         }
 
         return $classes;

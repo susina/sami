@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser;
+namespace Susina\Sami\Parser;
 
-use Sami\Parser\Filter\FilterInterface;
-use Sami\Reflection\ClassReflection;
+use Susina\Sami\Parser\Filter\FilterInterface;
+use Susina\Sami\Reflection\ClassReflection;
 
 // @todo add types where there aren't
 class ParserContext
@@ -139,7 +139,7 @@ class ParserContext
 
     public function leaveNamespace(): void
     {
-        $this->namespace = null;
+        $this->namespace = '';
         $this->aliases = [];
     }
 

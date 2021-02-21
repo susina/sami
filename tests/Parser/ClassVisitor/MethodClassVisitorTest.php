@@ -9,16 +9,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Tests\Parser\ClassVisitor;
+namespace Susina\Sami\Tests\Parser\ClassVisitor;
 
 use PHPUnit\Framework\TestCase;
-use Sami\Parser\ClassVisitor\MethodClassVisitor;
+use Susina\Sami\Parser\ClassVisitor\MethodClassVisitor;
 
 class MethodClassVisitorTest extends TestCase
 {
     public function testAddsMethods()
     {
-        $class = $this->getMockBuilder('Sami\Reflection\ClassReflection')
+        $class = $this->getMockBuilder('Susina\Sami\Reflection\ClassReflection')
             ->setMethods(['getTags'])
             ->setConstructorArgs(['Mock', 1])
             ->getMock();

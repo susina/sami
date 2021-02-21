@@ -1,13 +1,13 @@
 <?php
 
-namespace Sami\Tests\Parser;
+namespace Susina\Sami\Tests\Parser;
 
 use PhpParser\PrettyPrinter\Standard as PrettyPrinter;
 use PHPUnit\Framework\TestCase;
-use Sami\Parser\DocBlockParser;
-use Sami\Parser\Filter\TrueFilter;
-use Sami\Parser\ParserContext;
-use Sami\Reflection\ClassReflection;
+use Susina\Sami\Parser\DocBlockParser;
+use Susina\Sami\Parser\Filter\TrueFilter;
+use Susina\Sami\Parser\ParserContext;
+use Susina\Sami\Reflection\ClassReflection;
 
 class ParserContextTest extends TestCase
 {
@@ -31,6 +31,6 @@ class ParserContextTest extends TestCase
 
         $classes = $context->leaveFile();
 
-        $this->assertContainsOnlyInstancesOf('Sami\Reflection\ClassReflection', $classes);
+        $this->assertContainsOnlyInstancesOf('Susina\Sami\Reflection\ClassReflection', $classes);
     }
 }

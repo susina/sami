@@ -9,11 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Tests\Parser;
+namespace Susina\Sami\Tests\Parser;
 
 use PHPUnit\Framework\TestCase;
-use Sami\Parser\DocBlockParser;
-use Sami\Parser\Node\DocBlockNode;
+use Susina\Sami\Parser\DocBlockParser;
+use Susina\Sami\Parser\Node\DocBlockNode;
 
 class DocBlockParserTest extends TestCase
 {

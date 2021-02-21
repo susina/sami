@@ -9,11 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser\ClassVisitor;
+namespace Susina\Sami\Parser\ClassVisitor;
 
-use Sami\Reflection\ClassReflection;
-use Sami\Parser\ClassVisitorInterface;
-use Sami\RemoteRepository\AbstractRemoteRepository;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Parser\ClassVisitorInterface;
+use Susina\Sami\RemoteRepository\AbstractRemoteRepository;
 
 class ViewSourceClassVisitor implements ClassVisitorInterface
 {

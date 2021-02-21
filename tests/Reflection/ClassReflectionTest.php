@@ -1,9 +1,9 @@
 <?php
 
-namespace Sami\Tests\Reflection;
+namespace Susina\Sami\Tests\Reflection;
 
 use PHPUnit\Framework\TestCase;
-use Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\ClassReflection;
 
 class ClassReflectionTest extends TestCase
 {
@@ -22,7 +22,7 @@ class ClassReflectionTest extends TestCase
         $this->assertFalse($class->isPhpClass());
 
         // a class that is already loaded
-        $class = new ClassReflection('Sami\Tests\Reflection\ClassReflectionTest', 1);
+        $class = new ClassReflection('Susina\Sami\Tests\Reflection\ClassReflectionTest', 1);
         $this->assertFalse($class->isPhpClass());
 
         // a class that exists but is not already loaded

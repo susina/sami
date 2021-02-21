@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8848af155b01eaf7e611d66855f2f7ac",
+    "content-hash": "4d509f39f6bcbb4e8b1305dee9f70723",
     "packages": [
         {
             "name": "gossi/docblock",

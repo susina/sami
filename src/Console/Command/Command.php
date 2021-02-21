@@ -9,13 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Console\Command;
+namespace Susina\Sami\Console\Command;
 
-use Sami\Message;
-use Sami\Parser\Transaction;
-use Sami\Project;
-use Sami\Renderer\Diff;
-use Sami\Sami;
+use Susina\Sami\Message;
+use Susina\Sami\Parser\Transaction;
+use Susina\Sami\Project;
+use Susina\Sami\Version\Version;
+use Susina\Sami\Renderer\Diff;
+use Susina\Sami\Sami;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,8 +29,8 @@ abstract class Command extends BaseCommand
     const PARSE_ERROR = 64;
 
     protected Sami $sami;
-    protected string $version;
-    protected $started;
+    protected Version $version;
+    protected bool $started;
     protected array $diffs = [];
     protected array $transactions = [];
     protected array $errors = [];
@@ -135,12 +136,12 @@ abstract class Command extends BaseCommand
         }
     }
 
-    public function renderProgressBar(int $percent, int $length): string
+    public function renderProgressBar($percent, $length): string
     {
         return
-            str_repeat('#', floor($percent / 100 * $length))
+            str_repeat('#', (int) floor($percent / 100 * $length))
             .sprintf(' %d%%', $percent)
-            .str_repeat(' ', $length - floor($percent / 100 * $length))
+            .str_repeat(' ', $length - (int) floor($percent / 100 * $length))
         ;
     }
 

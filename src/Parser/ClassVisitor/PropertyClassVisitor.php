@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser\ClassVisitor;
+namespace Susina\Sami\Parser\ClassVisitor;
 
-use Sami\Parser\ClassVisitorInterface;
-use Sami\Parser\ParserContext;
-use Sami\Reflection\ClassReflection;
-use Sami\Reflection\PropertyReflection;
+use Susina\Sami\Parser\ClassVisitorInterface;
+use Susina\Sami\Parser\ParserContext;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\PropertyReflection;
 
 /**
  * Looks for @property tags on classes in the format of:.

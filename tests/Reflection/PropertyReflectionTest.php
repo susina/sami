@@ -1,9 +1,9 @@
 <?php
 
-namespace Sami\Tests\Reflection;
+namespace Susina\Sami\Tests\Reflection;
 
 use PHPUnit\Framework\TestCase;
-use Sami\Reflection\PropertyReflection;
+use Susina\Sami\Reflection\PropertyReflection;
 
 class PropertyReflectionTest extends TestCase
 {

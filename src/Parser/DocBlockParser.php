@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser;
+namespace Susina\Sami\Parser;
 
 use gossi\docblock\Docblock;
 use gossi\docblock\tags\AbstractTag;
@@ -23,7 +23,7 @@ use gossi\docblock\tags\SeeTag;
 use gossi\docblock\tags\TagFactory;
 use gossi\docblock\tags\ThrowsTag;
 use gossi\docblock\tags\VarTag;
-use Sami\Parser\Node\DocBlockNode;
+use Susina\Sami\Parser\Node\DocBlockNode;
 
 class DocBlockParser
 {

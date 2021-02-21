@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Renderer;
+namespace Susina\Sami\Renderer;
 
-use Sami\Project;
+use Susina\Sami\Project;
 
 class Index implements \Serializable
 {

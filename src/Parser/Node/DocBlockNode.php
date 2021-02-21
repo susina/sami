@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser\Node;
+namespace Susina\Sami\Parser\Node;
 
 class DocBlockNode
 {

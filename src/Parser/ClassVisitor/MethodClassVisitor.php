@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser\ClassVisitor;
+namespace Susina\Sami\Parser\ClassVisitor;
 
-use Sami\Parser\ClassVisitorInterface;
-use Sami\Reflection\ClassReflection;
-use Sami\Reflection\MethodReflection;
-use Sami\Reflection\ParameterReflection;
+use Susina\Sami\Parser\ClassVisitorInterface;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\MethodReflection;
+use Susina\Sami\Reflection\ParameterReflection;
 
 /**
  * Looks for @method tags on classes in the format of:

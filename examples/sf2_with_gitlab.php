@@ -1,8 +1,8 @@
 <?php
 
-use Sami\Sami;
-use Sami\RemoteRepository\GitLabRemoteRepository;
-use Sami\Version\GitVersionCollection;
+use Susina\Sami\Sami;
+use Susina\Sami\RemoteRepository\GitLabRemoteRepository;
+use Susina\Sami\Version\GitVersionCollection;
 use Symfony\Component\Finder\Finder;
 
 $iterator = Finder::create()

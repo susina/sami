@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami;
+namespace Susina\Sami;
 
 use IteratorAggregate;
 use PhpParser\NodeTraverser;
@@ -17,21 +17,21 @@ use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard as PrettyPrinter;
 use Pimple\Container;
-use Sami\Parser\ClassTraverser;
-use Sami\Parser\ClassVisitor;
-use Sami\Parser\CodeParser;
-use Sami\Parser\DocBlockParser;
-use Sami\Parser\Filter\DefaultFilter;
-use Sami\Parser\NodeVisitor;
-use Sami\Parser\Parser;
-use Sami\Parser\ParserContext;
-use Sami\RemoteRepository\AbstractRemoteRepository;
-use Sami\Renderer\Renderer;
-use Sami\Renderer\ThemeSet;
-use Sami\Renderer\TwigExtension;
-use Sami\Store\JsonStore;
-use Sami\Version\SingleVersionCollection;
-use Sami\Version\Version;
+use Susina\Sami\Parser\ClassTraverser;
+use Susina\Sami\Parser\ClassVisitor;
+use Susina\Sami\Parser\CodeParser;
+use Susina\Sami\Parser\DocBlockParser;
+use Susina\Sami\Parser\Filter\DefaultFilter;
+use Susina\Sami\Parser\NodeVisitor;
+use Susina\Sami\Parser\Parser;
+use Susina\Sami\Parser\ParserContext;
+use Susina\Sami\RemoteRepository\AbstractRemoteRepository;
+use Susina\Sami\Renderer\Renderer;
+use Susina\Sami\Renderer\ThemeSet;
+use Susina\Sami\Renderer\TwigExtension;
+use Susina\Sami\Store\JsonStore;
+use Susina\Sami\Version\SingleVersionCollection;
+use Susina\Sami\Version\Version;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -39,7 +39,7 @@ class Sami extends Container
 {
     const VERSION = '5.0-DEV';
 
-    public function __construct(?IteratorAggregate $iterator = null, array $config = [])
+    public function __construct(IteratorAggregate|string|null $iterator = null, array $config = [])
     {
         parent::__construct();
 

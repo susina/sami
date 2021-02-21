@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser;
+namespace Susina\Sami\Parser;
 
 use PhpParser\Node as AbstractNode;
 use PhpParser\Node\Name\FullyQualified;
@@ -25,12 +25,12 @@ use PhpParser\Node\Stmt\TraitUse as TraitUseNode;
 use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use PhpParser\Node\Stmt\Use_ as UseNode;
 use PhpParser\Node\NullableType;
-use Sami\Project;
-use Sami\Reflection\ClassReflection;
-use Sami\Reflection\ConstantReflection;
-use Sami\Reflection\MethodReflection;
-use Sami\Reflection\ParameterReflection;
-use Sami\Reflection\PropertyReflection;
+use Susina\Sami\Project;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\ConstantReflection;
+use Susina\Sami\Reflection\MethodReflection;
+use Susina\Sami\Reflection\ParameterReflection;
+use Susina\Sami\Reflection\PropertyReflection;
 
 class NodeVisitor extends NodeVisitorAbstract
 {
@@ -76,7 +76,7 @@ class NodeVisitor extends NodeVisitorAbstract
     protected function addAliases(UseNode $node): void
     {
         foreach ($node->uses as $use) {
-            $this->context->addAlias($use->alias, (string) $use->name);
+            $this->context->addAlias((string) $use->alias, (string) $use->name);
         }
     }
 
@@ -154,7 +154,7 @@ class NodeVisitor extends NodeVisitorAbstract
         $method->setByRef((string) $node->byRef);
 
         foreach ($node->params as $param) {
-            $parameter = new ParameterReflection(ltrim($param->var, '$'), $param->getLine());
+            $parameter = new ParameterReflection(ltrim($param->var->name, '$'), $param->getLine());
             $parameter->setModifiers($param->type);
             $parameter->setByRef($param->byRef);
             if ($param->default) {
@@ -173,7 +173,7 @@ class NodeVisitor extends NodeVisitorAbstract
                 $type = $param->type->type;
                 $typeStr = (string) $param->type->type;
             } elseif (null !== $param->type) {
-                $typeStr = (string) $param->type;
+                $typeStr = $param->type->getType();
             }
 
             if ($type instanceof FullyQualified && 0 !== strpos($typeStr, '\\')) {
@@ -220,7 +220,7 @@ class NodeVisitor extends NodeVisitorAbstract
         } elseif ($returnType instanceof NullableType) {
             $returnTypeStr = (string) $returnType->type;
         } elseif (null !== $returnType) {
-            $returnTypeStr = (string) $returnType;
+            $returnTypeStr = $returnType->getType();
         }
 
         if ($returnType instanceof FullyQualified && 0 !== strpos($returnTypeStr, '\\')) {

@@ -9,16 +9,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Tests\Parser\ClassVisitor;
+namespace Susina\Sami\Tests\Parser\ClassVisitor;
 
 use PHPUnit\Framework\TestCase;
-use Sami\Parser\ClassVisitor\PropertyClassVisitor;
+use Susina\Sami\Parser\ClassVisitor\PropertyClassVisitor;
 
 class PropertyClassVisitorTest extends TestCase
 {
     public function testAddsProperties()
     {
-        $class = $this->getMockBuilder('Sami\Reflection\ClassReflection')
+        $class = $this->getMockBuilder('Susina\Sami\Reflection\ClassReflection')
             ->setMethods(['getTags'])
             ->setConstructorArgs(['Mock', 1])
             ->getMock();
@@ -45,7 +45,7 @@ class PropertyClassVisitorTest extends TestCase
         ];
         $class->expects($this->any())->method('getTags')->with($this->equalTo('property'))->will($this->returnValue($property));
 
-        $context = $this->getMockBuilder('Sami\Parser\ParserContext')->disableOriginalConstructor()->getMock();
+        $context = $this->getMockBuilder('Susina\Sami\Parser\ParserContext')->disableOriginalConstructor()->getMock();
 
         $visitor = new PropertyClassVisitor($context);
         $visitor->visit($class);

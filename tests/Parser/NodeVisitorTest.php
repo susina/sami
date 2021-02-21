@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace Sami\Tests\Parser;
+namespace Susina\Sami\Tests\Parser;
 
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Name\Relative;
@@ -10,15 +10,15 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeTraverser;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
-use Sami\Parser\DocBlockParser;
-use Sami\Parser\Filter\TrueFilter;
-use Sami\Parser\NodeVisitor;
-use Sami\Parser\ParserContext;
-use Sami\Project;
-use Sami\Reflection\ClassReflection;
-use Sami\Reflection\MethodReflection;
-use Sami\Reflection\ParameterReflection;
-use Sami\Store\ArrayStore;
+use Susina\Sami\Parser\DocBlockParser;
+use Susina\Sami\Parser\Filter\TrueFilter;
+use Susina\Sami\Parser\NodeVisitor;
+use Susina\Sami\Parser\ParserContext;
+use Susina\Sami\Project;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\MethodReflection;
+use Susina\Sami\Reflection\ParameterReflection;
+use Susina\Sami\Store\ArrayStore;
 
 /**
  * @author Tomasz Struczyński <t.struczynski@gmail.com>
@@ -37,7 +37,7 @@ class NodeVisitorTest extends TestCase
         $traverser->traverse([$method]);
 
         /* @var $method MethodReflection */
-        $reflMethod = $classReflection->getMethod($method->name);
+        $reflMethod = $classReflection->getMethod($method->getName());
 
         $this->assertCount(count($expectedHints), $reflMethod->getParameters());
         foreach ($reflMethod->getParameters() as $paramKey => $parameter) {
@@ -63,7 +63,7 @@ class NodeVisitorTest extends TestCase
         $traverser->traverse([$method]);
 
         /* @var $method MethodReflection */
-        $reflMethod = $classReflection->getMethod($method->name);
+        $reflMethod = $classReflection->getMethod($method->getName());
 
         $this->assertEquals($expectedReturnType, $reflMethod->getHintAsString());
     }

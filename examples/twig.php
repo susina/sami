@@ -1,6 +1,6 @@
 <?php
 
-use Sami\Version\GitVersionCollection;
+use Susina\Sami\Version\GitVersionCollection;
 
 $dir = '/Users/fabien/Code/github/twigphp/Twig/lib';
 

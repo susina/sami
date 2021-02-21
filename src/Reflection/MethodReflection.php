@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Reflection;
+namespace Susina\Sami\Reflection;
 
 use Iterator;
-use Sami\Project;
+use Susina\Sami\Project;
 use Stringable;
 
 class MethodReflection extends Reflection implements Stringable

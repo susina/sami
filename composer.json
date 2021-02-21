@@ -1,5 +1,5 @@
 {
-    "name": "sami/sami",
+    "name": "susina/sami",
     "type": "application",
     "description": "Sami, an API documentation generator",
     "keywords": ["phpdoc"],
@@ -8,6 +8,10 @@
         {
             "name": "Fabien Potencier",
             "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Cristiano Cinotti",
+            "email": "cristianocinotti@gmail.com"
         }
     ],
     "require": {
@@ -28,10 +32,10 @@
         "psalm/phar": "^4.5"
     },
     "autoload": {
-        "psr-4": { "Sami\\": "src/" }
+        "psr-4": { "Susina\\Sami\\": "src/" }
     },
     "autoload-dev": {
-        "psr-4": { "Sami\\Tests\\": "tests/" }
+        "psr-4": { "Susina\\Sami\\Tests\\": "tests/" }
     },
     "extra": {
         "branch-alias": {

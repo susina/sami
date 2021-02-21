@@ -9,17 +9,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami;
+namespace Susina\Sami;
 
-use Sami\Parser\Parser;
-use Sami\Reflection\ClassReflection;
-use Sami\Reflection\LazyClassReflection;
-use Sami\Renderer\Renderer;
-use Sami\RemoteRepository\AbstractRemoteRepository;
-use Sami\Store\StoreInterface;
-use Sami\Version\SingleVersionCollection;
-use Sami\Version\Version;
-use Sami\Version\VersionCollection;
+use Susina\Sami\Parser\Parser;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\LazyClassReflection;
+use Susina\Sami\Renderer\Renderer;
+use Susina\Sami\RemoteRepository\AbstractRemoteRepository;
+use Susina\Sami\Store\StoreInterface;
+use Susina\Sami\Version\SingleVersionCollection;
+use Susina\Sami\Version\Version;
+use Susina\Sami\Version\VersionCollection;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -349,7 +349,7 @@ class Project
         return $this->prepareDir($this->config['cache_dir']);
     }
 
-    public function flushDir(string $dir): string
+    public function flushDir(string $dir): void
     {
         $this->filesystem->remove($dir);
         $this->filesystem->mkdir($dir);
@@ -436,10 +436,10 @@ class Project
 
     protected function replaceVars(string $pattern): string
     {
-        return str_replace('%version%', $this->version, $pattern);
+        return str_replace('%version%', (string) $this->version, $pattern);
     }
 
-    protected function parseVersion(Version $version, string $previous, ?callable $callback = null, bool $force = false): void
+    protected function parseVersion(Version $version, ?Version $previous, ?callable $callback = null, bool $force = false): void
     {
         if (null === $this->parser) {
             throw new \LogicException('You must set a parser.');
@@ -464,7 +464,7 @@ class Project
         }
     }
 
-    protected function renderVersion(Version $version, string $previous, ?callable $callback = null, bool $force = false): void
+    protected function renderVersion(Version $version, ?Version $previous, ?callable $callback = null, bool $force = false): void
     {
         if (null === $this->renderer) {
             throw new \LogicException('You must set a renderer.');

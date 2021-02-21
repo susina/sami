@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Version;
+namespace Susina\Sami\Version;
 
 class SingleVersionCollection extends VersionCollection
 {

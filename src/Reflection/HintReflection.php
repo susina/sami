@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Reflection;
+namespace Susina\Sami\Reflection;
 
 //@todo refactor to accept only one type of name
 class HintReflection implements \Stringable

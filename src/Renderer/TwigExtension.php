@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Renderer;
+namespace Susina\Sami\Renderer;
 
 use Michelf\MarkdownExtra;
-use Sami\Reflection\ClassReflection;
-use Sami\Reflection\MethodReflection;
-use Sami\Reflection\PropertyReflection;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\MethodReflection;
+use Susina\Sami\Reflection\PropertyReflection;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -62,7 +62,7 @@ class TwigExtension extends AbstractExtension
 
     public function pathForClass(array $context, ClassReflection $class): string
     {
-        return $this->relativeUri($this->currentDepth).str_replace('\\', '/', $class).'.html';
+        return $this->relativeUri($this->currentDepth).str_replace('\\', '/', $class->getName()).'.html';
     }
 
     public function pathForNamespace(array $context, string $namespace): string
@@ -113,7 +113,7 @@ class TwigExtension extends AbstractExtension
             return $desc;
         }
 
-        if (null === $this->markdown) {
+        if (!isset($this->markdown)) {
             $this->markdown = new MarkdownExtra();
         }
 
@@ -135,7 +135,7 @@ class TwigExtension extends AbstractExtension
         return str_replace(["\n", "\r"], '', strip_tags($string));
     }
 
-    protected function relativeUri(string $value): string
+    protected function relativeUri(int $value): string
     {
         if (!$value) {
             return '';

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Renderer;
+namespace Susina\Sami\Renderer;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -44,7 +44,7 @@ class ThemeSet
                 throw new \InvalidArgumentException(sprintf('Theme manifest in "%s" must have a "name" entry.', $manifest));
             }
 
-            $this->themes[$config['name']] = $theme = new Theme($config['name'], dirname($manifest));
+            $this->themes[$config['name']] = $theme = new Theme($config['name'], dirname($manifest->getPathname()));
 
             if (isset($config['parent'])) {
                 $parents[$config['name']] = $config['parent'];

@@ -1,7 +1,7 @@
 <?php
 
 use Sami\Sami;
-use Sami\Version\GitVersionCollection;
+use Susina\Sami\Version\GitVersionCollection;
 use Symfony\Component\Finder\Finder;
 
 $iterator = Finder::create()

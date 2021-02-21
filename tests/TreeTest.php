@@ -1,12 +1,12 @@
 <?php
 
-namespace Sami\Tests;
+namespace Susina\Sami\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Sami\Project;
-use Sami\Reflection\ClassReflection;
-use Sami\Store\ArrayStore;
-use Sami\Tree;
+use Susina\Sami\Project;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Store\ArrayStore;
+use Susina\Sami\Tree;
 
 /**
  * @author Tomasz Struczyński <t.struczynski@gmail.com>

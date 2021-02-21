@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Console;
+namespace Susina\Sami\Console;
 
-use Sami\Console\Command\ParseCommand;
-use Sami\Console\Command\RenderCommand;
-use Sami\Console\Command\UpdateCommand;
-use Sami\Sami;
+use Susina\Sami\Console\Command\ParseCommand;
+use Susina\Sami\Console\Command\RenderCommand;
+use Susina\Sami\Console\Command\UpdateCommand;
+use Susina\Sami\Sami;
 use Symfony\Component\Console\Application as BaseApplication;
 
 class Application extends BaseApplication

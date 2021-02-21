@@ -9,13 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser;
+namespace Susina\Sami\Parser;
 
-use Sami\Message;
-use Sami\Project;
-use Sami\Reflection\ClassReflection;
-use Sami\Reflection\LazyClassReflection;
-use Sami\Store\StoreInterface;
+use Susina\Sami\Message;
+use Susina\Sami\Project;
+use Susina\Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\LazyClassReflection;
+use Susina\Sami\Store\StoreInterface;
 use Symfony\Component\Finder\Finder;
 
 class Parser
@@ -43,7 +43,7 @@ class Parser
         foreach ($this->iterator as $file) {
             ++$step;
 
-            $code = file_get_contents($file);
+            $code = file_get_contents($file->getPathname());
             $hash = sha1($code);
             if ($transaction->hasHash($hash)) {
                 continue;

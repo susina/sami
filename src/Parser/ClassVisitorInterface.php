@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser;
+namespace Susina\Sami\Parser;
 
-use Sami\Reflection\ClassReflection;
+use Susina\Sami\Reflection\ClassReflection;
 
 interface ClassVisitorInterface
 {

@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Renderer;
+namespace Susina\Sami\Renderer;
 
-use Sami\Indexer;
-use Sami\Message;
-use Sami\Project;
-use Sami\Tree;
+use Susina\Sami\Indexer;
+use Susina\Sami\Message;
+use Susina\Sami\Project;
+use Susina\Sami\Tree;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 
@@ -228,7 +228,7 @@ class Renderer
     protected function save(Project $project, string $uri, $template, $variables): void
     {
         $depth = substr_count($uri, '/');
-        $this->twig->getExtension('Sami\Renderer\TwigExtension')->setCurrentDepth($depth);
+        $this->twig->getExtension('Susina\Sami\Renderer\TwigExtension')->setCurrentDepth($depth);
         $this->twig->addGlobal('root_path', str_repeat('../', $depth));
 
         $file = $project->getBuildDir().'/'.$uri;

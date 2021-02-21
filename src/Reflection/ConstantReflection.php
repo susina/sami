@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Reflection;
+namespace Susina\Sami\Reflection;
 
-use Sami\Project;
+use Susina\Sami\Project;
 use Stringable;
 
 class ConstantReflection extends Reflection implements Stringable

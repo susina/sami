@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser\Filter;
+namespace Susina\Sami\Parser\Filter;
 
-use Sami\Reflection\MethodReflection;
-use Sami\Reflection\PropertyReflection;
+use Susina\Sami\Reflection\MethodReflection;
+use Susina\Sami\Reflection\PropertyReflection;
 
 class DefaultFilter extends TrueFilter
 {

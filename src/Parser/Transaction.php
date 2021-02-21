@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sami\Parser;
+namespace Susina\Sami\Parser;
 
-use Sami\Project;
-use Sami\Reflection\ClassReflection;
+use Susina\Sami\Project;
+use Susina\Sami\Reflection\ClassReflection;
 
 class Transaction
 {

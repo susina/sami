@@ -1,5 +1,9 @@
 # Sami: an API documentation generator
 
+> WARNING: 
+> Even if this tool is fully functional, the development is in early state: many changes could
+happen since the next stable release.
+
 
 This library is a fork of [FriendsOfPHP/Sami](https://github.com/FriendsOfPHP/Sami) moved on to work with PHP >= 8.0
 
